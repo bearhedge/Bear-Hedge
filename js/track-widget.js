@@ -241,10 +241,12 @@ const TrackWidget = {
       const pnlHKD = t.totalPremiumHKD || 0;
       const pnlUSD = t.totalPremiumUSD || 0;
 
-      // Get strike info from legs
+      // Calculate premium sold from legs
+      let premiumSoldUSD = 0;
       let putStrike = null, callStrike = null, leg1Premium = null, leg2Premium = null;
       if (t.legs && t.legs.length > 0) {
         for (const leg of t.legs) {
+          premiumSoldUSD += leg.premiumUSD || 0;
           if (leg.type === 'PUT') {
             putStrike = leg.strike;
             leg1Premium = leg.premiumUSD / (leg.contracts * 100);
@@ -254,6 +256,10 @@ const TrackWidget = {
           }
         }
       }
+      const HKD_RATE = 7.8;
+      const premiumSoldHKD = premiumSoldUSD * HKD_RATE;
+      const costToCloseUSD = premiumSoldUSD - pnlUSD;
+      const costToCloseHKD = premiumSoldHKD - pnlHKD;
 
       // Contract breakdown
       let contractsText = `${t.contracts}`;
@@ -279,9 +285,10 @@ const TrackWidget = {
               <span style="font-size: 11px; color: #555; margin-left: 8px;">${this.formatShortDate(current.todayStr)}</span>
               <span style="font-size: 9px; padding: 1px 6px; background: rgba(245, 158, 11, 0.2); color: #f59e0b; border-radius: 3px; margin-left: 6px;">LIVE</span>
             </div>
-            <div style="text-align: right;">
-              <div style="font-size: 14px; font-weight: 600; color: #f59e0b;">HKD ${pnlHKD.toFixed(0)}</div>
-              <div style="font-size: 10px; color: #555;">USD ${pnlUSD.toFixed(0)} unrealized</div>
+            <div style="text-align: right; font-size: 11px; line-height: 1.5;">
+              <div><span style="color: #666;">Sold</span> <span style="color: #fff;">HKD ${premiumSoldHKD.toFixed(0)}</span> <span style="color: #555;">(USD ${premiumSoldUSD.toFixed(0)})</span></div>
+              <div><span style="color: #666;">Now</span> <span style="color: #fff;">HKD ${costToCloseHKD.toFixed(0)}</span> <span style="color: #555;">(USD ${costToCloseUSD.toFixed(0)})</span></div>
+              <div><span style="color: #666;">P/L</span> <span style="color: #f59e0b; font-weight: 600;">HKD ${pnlHKD.toFixed(0)}</span> <span style="color: #555;">(USD ${pnlUSD.toFixed(0)})</span></div>
             </div>
           </div>
 
