@@ -139,17 +139,24 @@ const TrackWidget = {
     let html = `<div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px;">`;
 
     // === STREAK HEADER ===
-    if (streakLength > 0) {
+    // Include today's unrealized P&L if there's a live trade
+    const todayPnlHKD = (current && current.hasTrade && current.trade) ? (current.trade.totalPremiumHKD || 0) : 0;
+    const todayPnlUSD = (current && current.hasTrade && current.trade) ? (current.trade.totalPremiumUSD || 0) : 0;
+    const totalHKD = accumulatedHKD + todayPnlHKD;
+    const totalUSD = accumulatedUSD + todayPnlUSD;
+    const displayDays = (current && current.hasTrade) ? streakLength + 1 : streakLength;
+
+    if (streakLength > 0 || (current && current.hasTrade)) {
       html += `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #333;">
           <div>
             <span style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Streak</span>
-            <div style="font-size: 20px; font-weight: 600; color: #4ade80;">${streakLength} Day${streakLength > 1 ? 's' : ''}</div>
+            <div style="font-size: 20px; font-weight: 600; color: #4ade80;">${displayDays} Day${displayDays > 1 ? 's' : ''}</div>
           </div>
           <div style="text-align: right;">
             <span style="font-size: 11px; color: #666; text-transform: uppercase;">Total</span>
-            <div style="font-size: 18px; font-weight: 600; color: #4ade80;">HKD ${accumulatedHKD.toFixed(0)}</div>
-            <div style="font-size: 11px; color: #666;">USD ${accumulatedUSD.toFixed(0)}</div>
+            <div style="font-size: 18px; font-weight: 600; color: #4ade80;">HKD ${totalHKD.toFixed(0)}</div>
+            <div style="font-size: 11px; color: #666;">USD ${totalUSD.toFixed(0)}${todayPnlUSD > 0 ? ' (incl. unrealized)' : ''}</div>
           </div>
         </div>
       `;
@@ -227,17 +234,90 @@ const TrackWidget = {
       });
     }
 
-    // === LIVE TRADE (only show if there's actually a trade today) ===
+    // === DAY 2: LIVE TRADE (show as next day in streak format) ===
     if (current && current.hasTrade && current.trade) {
       const t = current.trade;
+      const dayNum = streakLength + 1;
+      const pnlHKD = t.totalPremiumHKD || 0;
+      const pnlUSD = t.totalPremiumUSD || 0;
+
+      // Get strike info from legs
+      let putStrike = null, callStrike = null, leg1Premium = null, leg2Premium = null;
+      if (t.legs && t.legs.length > 0) {
+        for (const leg of t.legs) {
+          if (leg.type === 'PUT') {
+            putStrike = leg.strike;
+            leg1Premium = leg.premiumUSD / (leg.contracts * 100);
+          } else if (leg.type === 'CALL') {
+            callStrike = leg.strike;
+            leg2Premium = leg.premiumUSD / (leg.contracts * 100);
+          }
+        }
+      }
+
+      // Contract breakdown
+      let contractsText = `${t.contracts}`;
+      if (putStrike && callStrike) {
+        contractsText = `${t.contracts / 2}P / ${t.contracts / 2}C`;
+      } else if (putStrike) {
+        contractsText = `${t.contracts}P`;
+      } else if (callStrike) {
+        contractsText = `${t.contracts}C`;
+      }
+
+      // Also add today's unrealized to accumulated total display
+      const totalHKD = accumulatedHKD + pnlHKD;
+      const totalUSD = accumulatedUSD + pnlUSD;
+
       html += `
-        <div style="padding: 12px; background: rgba(245, 158, 11, 0.08); border-radius: 4px; border: 1px solid rgba(245, 158, 11, 0.2); margin-top: 8px;">
-          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-            <span style="font-size: 11px; font-weight: 600; color: #f59e0b;">LIVE</span>
-            <span style="font-size: 10px; color: #666;">${t.entryTime}</span>
+        <div style="padding: 12px; margin-bottom: 8px; background: rgba(245, 158, 11, 0.06); border-radius: 4px; border-left: 2px solid #f59e0b;">
+
+          <!-- Header: Day + Date + P&L -->
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+            <div>
+              <span style="font-size: 13px; font-weight: 600; color: #fff;">Day ${dayNum}</span>
+              <span style="font-size: 11px; color: #555; margin-left: 8px;">${this.formatShortDate(current.todayStr)}</span>
+              <span style="font-size: 9px; padding: 1px 6px; background: rgba(245, 158, 11, 0.2); color: #f59e0b; border-radius: 3px; margin-left: 6px;">LIVE</span>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 14px; font-weight: 600; color: #f59e0b;">HKD ${pnlHKD.toFixed(0)}</div>
+              <div style="font-size: 10px; color: #555;">USD ${pnlUSD.toFixed(0)} unrealized</div>
+            </div>
           </div>
-          <div style="font-size: 12px; color: #fff;">
-            ${t.symbol} ${t.strategy} · ${t.contracts} contracts
+
+          <!-- Trade Info Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px; margin-bottom: 10px;">
+            <div>
+              <span style="color: #555;">${t.symbol}</span>
+              <span style="color: #888; margin-left: 4px;">${t.strategy}</span>
+            </div>
+            <div style="text-align: right;">
+              <span style="color: #555;">Entry</span>
+              <span style="color: #888; margin-left: 4px;">${t.entryTime}</span>
+            </div>
+            <div>
+              <span style="color: #555;">Strikes</span>
+              <span style="color: #888; margin-left: 4px;">${putStrike || '-'}P / ${callStrike || '-'}C</span>
+            </div>
+            <div style="text-align: right;">
+              <span style="color: #555;">Contracts</span>
+              <span style="color: #888; margin-left: 4px;">${contractsText}</span>
+            </div>
+          </div>
+
+          <!-- Premium per leg -->
+          <div style="font-size: 10px; color: #444; margin-bottom: 8px;">
+            ${leg1Premium ? `Put @${leg1Premium.toFixed(3)}` : ''}
+            ${leg1Premium && leg2Premium ? ' · ' : ''}
+            ${leg2Premium ? `Call @${leg2Premium.toFixed(3)}` : ''}
+          </div>
+
+          <!-- Status -->
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid #333;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-radius: 3px;">
+              Open
+            </span>
+            ${current.timeUntilClose ? `<span style="font-size: 10px; color: #666;">Closes in ${current.timeUntilClose}</span>` : ''}
           </div>
         </div>
       `;
