@@ -42,9 +42,13 @@ const TrackWidget = {
   },
 
   calculateStreak(trades) {
-    const sorted = [...trades].sort((a, b) => new Date(b.date) - new Date(a.date));
+    // Sort by date descending, filter out open trades
+    const closedTrades = trades
+      .filter(t => t.outcome !== 'open' && t.status !== 'open')
+      .sort((a, b) => new Date(b.date) - new Date(a.date));
+
     const streakTrades = [];
-    for (const trade of sorted) {
+    for (const trade of closedTrades) {
       if (trade.outcome === 'win') {
         streakTrades.push(trade);
       } else {
