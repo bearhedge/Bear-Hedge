@@ -4,4 +4,14 @@ node_modules/
 *.jar
 *.safetensors
 *.mp3
+*.gif
+*.jpg
+*.jpeg
+*.png
+*.mov
+*.mp4
+*.HEIC
+*.npz
 Tofu/
+audio/
+images/
