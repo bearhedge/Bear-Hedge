@@ -1,0 +1,1173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Bear Hedge - Systematic options trading. Hong Kong.">
+  <title>Bear Hedge</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #000;
+      --text: #fff;
+      --text-muted: #888;
+      --text-dim: #555;
+      --border: #333;
+      --accent: #707070;
+      --accent-dark: #707070;
+    }
+
+    body {
+      font-family: 'IBM Plex Mono', monospace;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Header Bar */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 40px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      gap: 24px;
+      z-index: 200;
+      font-size: 13px;
+    }
+
+    .header__brand {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .header__icon {
+      display: flex;
+      gap: 3px;
+      align-items: center;
+      height: 18px;
+    }
+
+    .candle {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .candle__wick {
+      width: 1px;
+      background: currentColor;
+    }
+
+    .candle__body {
+      width: 4px;
+      background: currentColor;
+    }
+
+    .candle--up .candle__body { background: #4ade80; }
+    .candle--down .candle__body { background: #ef4444; }
+
+    .header__time {
+      display: flex;
+      gap: 8px;
+      font-size: 12px;
+    }
+
+    .header__time-sep {
+      opacity: 0.4;
+    }
+
+    .time-hk {
+      color: #4dd0e1;
+    }
+
+    .time-lon {
+      color: #ffa8a8;
+    }
+
+    .time-ny {
+      color: #7ec8a3;
+    }
+
+    /* Market Data */
+    .header__markets {
+      display: flex;
+      gap: 20px;
+      font-size: 12px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .market-item {
+      display: flex;
+      gap: 6px;
+    }
+
+    .market-item.up {
+      color: #4ade80;
+    }
+
+    .market-item.down {
+      color: #ff7575;
+    }
+
+    .market-item {
+      color: #fff;
+    }
+
+    /* Dynamic Mood Animations */
+    @keyframes slow-rainbow {
+      0% { color: #ffd700; }
+      25% { color: #ff9ff3; }
+      50% { color: #87ceeb; }
+      75% { color: #98fb98; }
+      100% { color: #ffd700; }
+    }
+
+    @keyframes pulse-glow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+
+    @keyframes rainbow {
+      0% { color: #ff0000; }
+      17% { color: #ff8000; }
+      33% { color: #ffff00; }
+      50% { color: #00ff00; }
+      67% { color: #0080ff; }
+      83% { color: #8000ff; }
+      100% { color: #ff0000; }
+    }
+
+    .tofu-status.mood-party {
+      animation: slow-rainbow 8s ease-in-out infinite;
+    }
+
+    .tofu-mood.mood-party {
+      color: #ffd700;
+    }
+
+    .tofu-status.mood-sleepy {
+      color: #a78bfa;
+      animation: pulse-glow 3s ease-in-out infinite;
+    }
+
+    .tofu-status.mood-festive {
+      color: #22c55e;
+      animation: pulse-glow 1.5s ease-in-out infinite;
+    }
+
+    .tofu-status.mood-spooky {
+      color: #f97316;
+      text-shadow: 0 0 10px #f97316;
+    }
+
+    .tofu-status.mood-love {
+      color: #ec4899;
+      animation: pulse-glow 1s ease-in-out infinite;
+    }
+
+    .tofu-status.mood-great {
+      color: #4ade80;
+      animation: pulse-glow 0.8s ease-in-out infinite;
+    }
+
+    .tofu-status.mood-bad {
+      color: #ef4444;
+      animation: pulse-glow 0.5s ease-in-out infinite;
+    }
+
+    /* Main Area */
+    .main {
+      padding-top: 40px;
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* Windows */
+    .window {
+      position: absolute;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      min-width: 200px;
+      min-height: 100px;
+      display: none;
+      resize: both;
+      overflow: hidden;
+    }
+
+    .window.active {
+      display: block;
+    }
+
+    .window::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      cursor: nwse-resize;
+      background: linear-gradient(135deg, transparent 50%, #444 50%);
+    }
+
+    .window__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      cursor: move;
+      user-select: none;
+    }
+
+    .window__title {
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .window__title-icon {
+      opacity: 0.5;
+      margin-left: 4px;
+    }
+
+    .window__close {
+      font-size: 12px;
+      color: var(--text-muted);
+      cursor: pointer;
+      background: none;
+      border: none;
+      font-family: inherit;
+      transition: color 0.2s;
+    }
+
+    .window__close:hover {
+      color: var(--text);
+    }
+
+    .window__content {
+      padding: 20px;
+      height: calc(100% - 45px);
+      overflow: auto;
+    }
+
+    .window__content p {
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    .window__content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Window positions */
+    #window-readme {
+      top: 80px;
+      left: 60px;
+    }
+
+    #window-tofu {
+      top: 80px;
+      right: 60px;
+    }
+
+    #window-contact {
+      top: 120px;
+      left: 200px;
+    }
+
+    #window-track {
+      top: 100px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    #window-candle {
+      top: 160px;
+      right: 100px;
+    }
+
+    #window-projects {
+      top: 200px;
+      left: 80px;
+    }
+
+    #window-nft {
+      top: 140px;
+      right: 200px;
+    }
+
+    /* Tofu specific */
+    .tofu-image {
+      width: 100%;
+      min-height: 100px;
+      flex: 1;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+
+    .tofu-image img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      background: #111;
+      image-rendering: pixelated;
+    }
+
+    .tofu-placeholder {
+      font-size: 32px;
+      color: var(--text-dim);
+    }
+
+    #window-tofu .window__content {
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 16px;
+    }
+
+    #window-tofu .window__content p {
+      margin: 4px 0;
+      line-height: 1.4;
+    }
+
+    .tofu-status {
+      transition: color 0.3s ease;
+    }
+
+    .tofu-playing {
+      color: #1db954;
+    }
+
+    .music-btn {
+      background: none;
+      border: 1px solid #1db954;
+      color: #1db954;
+      padding: 3px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      margin-left: 10px;
+      font-family: inherit;
+      vertical-align: middle;
+    }
+
+    .music-btn:hover {
+      background: #1db954;
+      color: #000;
+    }
+
+    .music-time {
+      color: #888;
+      font-size: 11px;
+      margin-left: 8px;
+    }
+
+    .music-progress {
+      height: 4px;
+      background: #333;
+      margin-top: 8px;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .music-progress:hover {
+      height: 6px;
+    }
+
+    .music-progress-bar {
+      height: 100%;
+      background: #1db954;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .music-progress:hover .music-progress-bar {
+      background: #1ed760;
+    }
+
+    /* Track window */
+    .track-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .track-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      padding: 4px 0;
+      border-bottom: 1px solid #222;
+    }
+
+    .track-label {
+      color: var(--text-muted);
+    }
+
+    .track-value {
+      color: var(--text);
+    }
+
+    /* Candle chart */
+    .chart-placeholder {
+      background: #111;
+      padding: 16px;
+      border: 1px solid #222;
+    }
+
+    .chart-candles {
+      display: flex;
+      align-items: flex-end;
+      gap: 8px;
+      height: 60px;
+    }
+
+    .chart-candle {
+      width: 8px;
+      border-radius: 1px;
+    }
+
+    .chart-candle.up {
+      background: #4ade80;
+    }
+
+    .chart-candle.down {
+      background: #ef4444;
+    }
+
+    /* Projects */
+    .project-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #222;
+    }
+
+    .project-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .project-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .project-name {
+      font-weight: 500;
+      font-size: 13px;
+    }
+
+    .project-status {
+      font-size: 9px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      min-width: 32px;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .project-status.live {
+      background: #4ade80;
+      color: #000;
+    }
+
+    .project-status.building {
+      background: #f59e0b;
+      color: #000;
+    }
+
+    .project-link {
+      color: #87ceeb;
+      font-size: 11px;
+      text-decoration: none;
+    }
+
+    .project-link:hover {
+      text-decoration: underline;
+    }
+
+    .project-stats {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    /* NFT */
+    .nft-preview {
+      background: #111;
+      border: 1px solid #222;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nft-placeholder {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #333 0%, #1a1a1a 100%);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Contact links */
+    .contact-link {
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+
+    .contact-link:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .contact-link:first-child {
+      padding-top: 0;
+    }
+
+    .contact-link:hover {
+      color: var(--accent);
+    }
+
+    .contact-link span {
+      color: var(--text-muted);
+      margin-right: 12px;
+    }
+
+    /* Dock */
+    .dock {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 100;
+      font-size: 13px;
+    }
+
+    .dock__prompt {
+      color: var(--accent);
+      margin-right: 4px;
+    }
+
+    .dock__cursor {
+      display: inline-block;
+      width: 8px;
+      height: 16px;
+      background: var(--text);
+      animation: blink 1s step-end infinite;
+      vertical-align: text-bottom;
+      margin-right: 12px;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    .dock__item {
+      padding: 8px 14px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-size: 12px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s ease;
+    }
+
+    .dock__item:hover {
+      border-color: var(--text-dim);
+      color: var(--text);
+    }
+
+    .dock__item.active {
+      border-color: var(--text);
+      color: var(--text);
+    }
+
+    /* Footer */
+    .footer {
+      position: fixed;
+      bottom: 70px;
+      left: 0;
+      right: 0;
+      text-align: center;
+      font-size: 10px;
+      color: var(--text-dim);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header {
+        padding: 0 12px;
+        font-size: 11px;
+        gap: 12px;
+      }
+
+      .header__time {
+        font-size: 10px;
+      }
+
+      .window {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: translate(-50%, -50%) !important;
+        width: calc(100% - 32px);
+        max-width: none;
+      }
+
+      .dock {
+        flex-wrap: wrap;
+        justify-content: center;
+        max-width: calc(100% - 32px);
+        gap: 8px;
+      }
+
+      .dock__prompt,
+      .dock__cursor {
+        display: none;
+      }
+
+      .footer {
+        bottom: 90px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header__brand">
+      <div class="header__icon">
+        <div class="candle candle--up">
+          <div class="candle__wick" style="height: 2px;"></div>
+          <div class="candle__body" style="height: 10px;"></div>
+          <div class="candle__wick" style="height: 2px;"></div>
+        </div>
+        <div class="candle candle--down">
+          <div class="candle__wick" style="height: 2px;"></div>
+          <div class="candle__body" style="height: 8px;"></div>
+          <div class="candle__wick" style="height: 2px;"></div>
+        </div>
+      </div>
+      Bear Hedge
+    </div>
+    <div class="header__markets">
+      <div class="market-item">
+        <span class="market-label">S&P</span>
+        <span id="spx-value">--</span>
+      </div>
+      <div class="market-item">
+        <span class="market-label">VIX</span>
+        <span id="vix-value">--</span>
+      </div>
+    </div>
+    <div class="header__time">
+      <span id="time-hk" class="time-hk"></span>
+      <span class="header__time-sep">·</span>
+      <span id="time-lon" class="time-lon"></span>
+      <span class="header__time-sep">·</span>
+      <span id="time-ny" class="time-ny"></span>
+    </div>
+  </header>
+
+  <!-- Main Area -->
+  <main class="main">
+    <!-- README Window -->
+    <div class="window" id="window-readme">
+      <div class="window__header">
+        <span class="window__title">README.txt</span>
+        <button class="window__close" onclick="toggleWindow('readme')">close</button>
+      </div>
+      <div class="window__content">
+        <p>> OPTIONS TRADING</p>
+        <p>> HONG KONG</p>
+        <p>> FOCUS: TOOLING</p>
+      </div>
+    </div>
+
+    <!-- Tofu Window -->
+    <div class="window" id="window-tofu">
+      <div class="window__header">
+        <span class="window__title">chief-dog-officer</span>
+        <button class="window__close" onclick="toggleWindow('tofu')">close</button>
+      </div>
+      <div class="window__content">
+        <div class="tofu-image">
+          <img src="images/tofu/default.gif" alt="Tofu" style="image-rendering: pixelated;" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+          <span class="tofu-placeholder" style="display:none;">DOG</span>
+        </div>
+        <p>> TOFU</p>
+        <p>> STATUS: <span id="tofu-status" class="tofu-status">GOOD BOY</span></p>
+        <p>> MOOD: <span id="tofu-mood" class="tofu-mood"></span></p>
+        <!-- Music player hidden for now
+        <p>> PLAYING: <span id="tofu-playing" class="tofu-playing">SKRILLEX</span> <button id="music-toggle" class="music-btn">▶</button> <span id="music-time" class="music-time">0:00</span></p>
+        <div class="music-progress" id="music-progress">
+          <div class="music-progress-bar" id="music-progress-bar"></div>
+        </div>
+        <audio id="tofu-audio" loop preload="metadata">
+          <source src="audio/macintosh-plus-420.mp3" type="audio/mpeg">
+        </audio>
+        -->
+      </div>
+    </div>
+
+    <!-- Contact Window -->
+    <div class="window" id="window-contact">
+      <div class="window__header">
+        <span class="window__title">contact.sh</span>
+        <button class="window__close" onclick="toggleWindow('contact')">close</button>
+      </div>
+      <div class="window__content">
+        <a href="mailto:info@bearhedge.com" class="contact-link">
+          <span>> EMAIL</span>info@bearhedge.com
+        </a>
+        <a href="https://www.linkedin.com/company/bearhedge" target="_blank" class="contact-link">
+          <span>> LINKEDIN</span>/company/bearhedge
+        </a>
+        <div class="contact-link" style="cursor: default; border-bottom: none;">
+          <span>> ADDRESS</span>SUP Tower, Room 1104, 75 King's Road
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACK Window -->
+    <div class="window" id="window-track" style="min-width: 340px;">
+      <div class="window__header">
+        <span class="window__title">track.log</span>
+        <button class="window__close" onclick="toggleWindow('track')">close</button>
+      </div>
+      <div class="window__content">
+        <p style="color: #4ade80; margin-bottom: 12px;">> DAILY TRACK RECORD</p>
+        <div class="track-grid">
+          <div class="track-row">
+            <span class="track-label">DATE</span>
+            <span class="track-value">2025-12-30</span>
+          </div>
+          <div class="track-row">
+            <span class="track-label">P&L</span>
+            <span class="track-value" style="color: #4ade80;">+$1,247.50</span>
+          </div>
+          <div class="track-row">
+            <span class="track-label">POSITIONS</span>
+            <span class="track-value">12 contracts</span>
+          </div>
+          <div class="track-row">
+            <span class="track-label">DELTA</span>
+            <span class="track-value">-0.15</span>
+          </div>
+          <div class="track-row">
+            <span class="track-label">THETA</span>
+            <span class="track-value">+$342.00</span>
+          </div>
+          <div class="track-row">
+            <span class="track-label">NOTIONAL</span>
+            <span class="track-value">$124,500</span>
+          </div>
+          <div class="track-row">
+            <span class="track-label">TURNOVER</span>
+            <span class="track-value">$18,200</span>
+          </div>
+        </div>
+        <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #333;">
+          <p style="font-size: 11px; color: #888;">> VERIFIED ON-CHAIN</p>
+          <p style="font-size: 11px; color: #888; word-break: break-all;">0x7a3b...4f2d</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CANDLE Window -->
+    <div class="window" id="window-candle" style="min-width: 320px;">
+      <div class="window__header">
+        <span class="window__title">candle.png</span>
+        <span class="project-status building" style="margin-left: 8px;">WIP</span>
+        <button class="window__close" onclick="toggleWindow('candle')">close</button>
+      </div>
+      <div class="window__content">
+        <p style="color: #ffeb3b; margin-bottom: 12px;">> OPTION CHART</p>
+        <p style="color: #666; font-size: 11px; margin-bottom: 12px;">Coming soon</p>
+        <div class="chart-placeholder">
+          <div class="chart-candles">
+            <div class="chart-candle up" style="height: 40px;"></div>
+            <div class="chart-candle down" style="height: 25px;"></div>
+            <div class="chart-candle up" style="height: 35px;"></div>
+            <div class="chart-candle down" style="height: 20px;"></div>
+            <div class="chart-candle up" style="height: 45px;"></div>
+            <div class="chart-candle up" style="height: 50px;"></div>
+            <div class="chart-candle down" style="height: 30px;"></div>
+            <div class="chart-candle up" style="height: 55px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROJECTS Window -->
+    <div class="window" id="window-projects" style="min-width: 300px;">
+      <div class="window__header">
+        <span class="window__title">projects/</span>
+        <button class="window__close" onclick="toggleWindow('projects')">close</button>
+      </div>
+      <div class="window__content">
+        <p style="color: #87ceeb; margin-bottom: 16px;">> ACTIVE PROJECTS</p>
+
+        <div class="project-item">
+          <div class="project-header">
+            <span class="project-name">APE YOLO</span>
+            <span class="project-status live">LIVE</span>
+          </div>
+          <a href="https://apeyolo.com" target="_blank" class="project-link">apeyolo.com</a>
+        </div>
+
+        <div class="project-item">
+          <div class="project-header">
+            <span class="project-name">DD Owl</span>
+            <span class="project-status live">LIVE</span>
+          </div>
+          <a href="https://ddowl.com" target="_blank" class="project-link">ddowl.com</a>
+        </div>
+
+        <div class="project-item">
+          <div class="project-header">
+            <span class="project-name">Strawdog</span>
+            <span class="project-status building">WIP</span>
+          </div>
+          <a href="https://strawdog.io" target="_blank" class="project-link">strawdog.io</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Dock -->
+  <div class="dock">
+    <span class="dock__prompt">$</span>
+    <span class="dock__cursor"></span>
+    <button class="dock__item" onclick="toggleWindow('readme')" id="dock-readme">README.txt</button>
+    <button class="dock__item" onclick="toggleWindow('tofu')" id="dock-tofu">chief-dog-officer</button>
+    <button class="dock__item" onclick="toggleWindow('contact')" id="dock-contact">contact.sh</button>
+    <button class="dock__item" onclick="toggleWindow('track')" id="dock-track">track.log</button>
+    <button class="dock__item" onclick="toggleWindow('candle')" id="dock-candle">candle.png</button>
+    <button class="dock__item" onclick="toggleWindow('projects')" id="dock-projects">projects/</button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <span>© 2024 Bear Hedge Ltd · Hong Kong</span>
+  </footer>
+
+  <script>
+    // Window state
+    const windowState = {
+      readme: false,
+      tofu: false,
+      contact: false,
+      track: false,
+      candle: false,
+      projects: false,
+      nft: false
+    };
+
+    function toggleWindow(name) {
+      windowState[name] = !windowState[name];
+      const windowEl = document.getElementById('window-' + name);
+      const dockEl = document.getElementById('dock-' + name);
+
+      if (windowState[name]) {
+        windowEl.classList.add('active');
+        dockEl.classList.add('active');
+      } else {
+        windowEl.classList.remove('active');
+        dockEl.classList.remove('active');
+      }
+    }
+
+    // Update time - triple timezone with seconds
+    function updateTime() {
+      const now = new Date();
+
+      // Hong Kong time
+      const hkTime = now.toLocaleTimeString('en-US', {
+        timeZone: 'Asia/Hong_Kong',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+
+      // London time
+      const lonTime = now.toLocaleTimeString('en-US', {
+        timeZone: 'Europe/London',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+
+      // New York time
+      const nyTime = now.toLocaleTimeString('en-US', {
+        timeZone: 'America/New_York',
+        hour: 'numeric',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+
+      document.getElementById('time-hk').textContent = `HK ${hkTime}`;
+      document.getElementById('time-lon').textContent = `LON ${lonTime}`;
+      document.getElementById('time-ny').textContent = `NY ${nyTime}`;
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+
+    // Fetch S&P/VIX data - always show latest price
+    async function fetchMarketData() {
+      const spxEl = document.getElementById('spx-value');
+      const vixEl = document.getElementById('vix-value');
+
+      async function fetchQuote(symbol, el, formatWithComma) {
+        if (!el) return;
+
+        try {
+          // Use corsproxy.io with cache-busting timestamp
+          const timestamp = Date.now();
+          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1m&range=1d&t=${timestamp}`;
+          const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+
+          const response = await fetch(proxyUrl, {
+            cache: 'no-store',
+            headers: { 'Cache-Control': 'no-cache' }
+          });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.chart && data.chart.result && data.chart.result[0]) {
+              const result = data.chart.result[0];
+              const price = result.meta.regularMarketPrice;
+              const prevClose = result.meta.previousClose;
+              const change = ((price - prevClose) / prevClose * 100).toFixed(2);
+
+              const priceStr = formatWithComma
+                ? price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                : price.toFixed(2);
+
+              // Show absolute change, color entire item based on direction
+              // VIX is inverted: up = red (fear), down = green (calm)
+              const absChange = Math.abs(parseFloat(change)).toFixed(2);
+              const changeVal = parseFloat(change);
+              const changeStr = changeVal < 0 ? `(${absChange}%)` : `${absChange}%`;
+              el.textContent = `${priceStr} ${changeStr}`;
+              const isVix = symbol === '^VIX';
+              let direction = '';
+              if (changeVal > 0) {
+                direction = isVix ? 'down' : 'up';  // VIX up = bad (red)
+              } else if (changeVal < 0) {
+                direction = isVix ? 'up' : 'down';  // VIX down = good (green)
+              }
+              el.parentElement.className = 'market-item ' + direction;
+              console.log(`${symbol}: ${price} (${change}%)`);
+            }
+          }
+        } catch (e) {
+          console.log(`Failed to fetch ${symbol}:`, e.message);
+        }
+      }
+
+      console.log('Fetching market data...');
+
+      // ^GSPC = S&P 500 Index, ^VIX = VIX Index
+      await Promise.all([
+        fetchQuote('^GSPC', spxEl, true),
+        fetchQuote('^VIX', vixEl, false)
+      ]);
+    }
+
+    // Fetch market data every 5 seconds
+    fetchMarketData();
+    setInterval(fetchMarketData, 5000);
+
+    // Tofu status is now handled by TofuWidget (js/tofu-widget.js)
+
+    // Music player
+    const audio = document.getElementById('tofu-audio');
+    const musicBtn = document.getElementById('music-toggle');
+    const musicTime = document.getElementById('music-time');
+    const musicProgress = document.getElementById('music-progress');
+    const musicProgressBar = document.getElementById('music-progress-bar');
+
+    function formatTime(seconds) {
+      if (!seconds || isNaN(seconds)) return '0:00';
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    if (musicBtn && audio) {
+      let isSeeking = false;
+      let seekPercent = null;
+
+      // Play/pause
+      musicBtn.addEventListener('click', () => {
+        if (audio.paused) {
+          audio.play();
+          musicBtn.textContent = '⏸';
+        } else {
+          audio.pause();
+          musicBtn.textContent = '▶';
+        }
+      });
+
+      // Update progress bar during playback (but not while user is seeking)
+      audio.addEventListener('timeupdate', () => {
+        if (!isSeeking && audio.duration) {
+          musicProgressBar.style.width = (audio.currentTime / audio.duration * 100) + '%';
+          musicTime.textContent = formatTime(audio.currentTime);
+        }
+      });
+
+      // When user clicks/drags on progress bar
+      function handleSeek(e) {
+        const rect = musicProgress.getBoundingClientRect();
+        const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+        seekPercent = percent;
+
+        // Update visual immediately
+        musicProgressBar.style.width = (percent * 100) + '%';
+
+        // If we have duration, show the time
+        if (audio.duration) {
+          musicTime.textContent = formatTime(percent * audio.duration);
+        }
+      }
+
+      // Apply seek - called when mouseup
+      function applySeek() {
+        if (seekPercent === null || !audio.duration) return;
+
+        const targetTime = seekPercent * audio.duration;
+        const pct = seekPercent;
+        seekPercent = null;
+
+        // Start playing and seek
+        audio.play().then(() => {
+          audio.currentTime = targetTime;
+          musicProgressBar.style.width = (pct * 100) + '%';
+        }).catch(() => {});
+        musicBtn.textContent = '⏸';
+      }
+
+      // Mouse events
+      musicProgress.addEventListener('mousedown', (e) => {
+        isSeeking = true;
+        handleSeek(e);
+        e.preventDefault();
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (isSeeking) handleSeek(e);
+      });
+
+      document.addEventListener('mouseup', () => {
+        if (isSeeking) {
+          isSeeking = false;
+          // Small delay to ensure audio is ready
+          setTimeout(applySeek, 50);
+        }
+      });
+    }
+
+    // Close windows on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        Object.keys(windowState).forEach(name => {
+          if (windowState[name]) {
+            toggleWindow(name);
+          }
+        });
+      }
+    });
+
+    // Simple drag functionality - drag from anywhere on window
+    document.querySelectorAll('.window').forEach(win => {
+      let isDragging = false;
+      let startX, startY, startLeft, startTop;
+
+      win.addEventListener('mousedown', (e) => {
+        // Don't drag if clicking buttons, links, inputs, or audio controls
+        if (e.target.closest('button, a, input, textarea, audio, .window__close')) return;
+
+        const window = win;
+        isDragging = true;
+        startX = e.clientX;
+        startY = e.clientY;
+
+        const rect = window.getBoundingClientRect();
+        startLeft = rect.left;
+        startTop = rect.top;
+
+        window.style.position = 'fixed';
+        window.style.left = startLeft + 'px';
+        window.style.top = startTop + 'px';
+        window.style.right = 'auto';
+        window.style.bottom = 'auto';
+        window.style.transform = 'none';
+      });
+
+      document.addEventListener('mousemove', (e) => {
+        if (!isDragging) return;
+
+        const window = win;
+        const deltaX = e.clientX - startX;
+        const deltaY = e.clientY - startY;
+
+        window.style.left = (startLeft + deltaX) + 'px';
+        window.style.top = (startTop + deltaY) + 'px';
+      });
+
+      document.addEventListener('mouseup', () => {
+        isDragging = false;
+      });
+    });
+  </script>
+  <script src="js/tofu-widget.js"></script>
+  <script src="js/track-widget.js"></script>
+</body>
+</html>

@@ -1,0 +1,1164 @@
+{
+  "events": [
+    {
+      "name": "New Year",
+      "date": "01-01",
+      "type": "fixed",
+      "priority": 1,
+      "emoji": "🎆",
+      "region": "global",
+      "status": "CELEBRATING",
+      "gif": null
+    },
+    {
+      "name": "New Year's Eve",
+      "date": "12-31",
+      "type": "fixed",
+      "priority": 1,
+      "emoji": "",
+      "region": "global",
+      "status": "ZOOMIES",
+      "gif": null
+    },
+    {
+      "name": "Chinese New Year",
+      "date": "2026-02-17",
+      "type": "lunar",
+      "priority": 1,
+      "emoji": "🧧",
+      "region": "hk",
+      "status": "GONG HEI FAT CHOY",
+      "gif": null
+    },
+    {
+      "name": "Valentine's Day",
+      "date": "02-14",
+      "type": "fixed",
+      "priority": 2,
+      "emoji": "💕",
+      "region": "global",
+      "status": "FEELING LOVE",
+      "gif": null
+    },
+    {
+      "name": "Pi Day",
+      "date": "03-14",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🥧",
+      "region": "global",
+      "status": "CALCULATING",
+      "gif": null
+    },
+    {
+      "name": "St Patrick's Day",
+      "date": "03-17",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "🍀",
+      "region": "global",
+      "status": "LUCKY",
+      "gif": null
+    },
+    {
+      "name": "April Fools",
+      "date": "04-01",
+      "type": "fixed",
+      "priority": 2,
+      "emoji": "🤡",
+      "region": "global",
+      "status": "TROLLING",
+      "gif": null
+    },
+    {
+      "name": "420",
+      "date": "04-20",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "🌿",
+      "region": "global",
+      "status": "BLAZING",
+      "gif": null
+    },
+    {
+      "name": "Star Wars Day",
+      "date": "05-04",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "⚔️",
+      "region": "global",
+      "status": "MAY THE FOURTH",
+      "gif": null
+    },
+    {
+      "name": "Cinco de Mayo",
+      "date": "05-05",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🌮",
+      "region": "global",
+      "status": "FIESTA",
+      "gif": null
+    },
+    {
+      "name": "Friday the 13th",
+      "date": "2026-02-13",
+      "type": "lunar",
+      "priority": 3,
+      "emoji": "🔪",
+      "region": "global",
+      "status": "CURSED",
+      "gif": null
+    },
+    {
+      "name": "Talk Like a Pirate Day",
+      "date": "09-19",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🏴‍☠️",
+      "region": "global",
+      "status": "YARRR",
+      "gif": null
+    },
+    {
+      "name": "Thanksgiving",
+      "date": "2026-11-26",
+      "type": "lunar",
+      "priority": 2,
+      "emoji": "🦃",
+      "region": "global",
+      "status": "STUFFED",
+      "gif": null
+    },
+    {
+      "name": "Black Friday",
+      "date": "2026-11-27",
+      "type": "lunar",
+      "priority": 2,
+      "emoji": "🛒",
+      "region": "global",
+      "status": "CONSUMING",
+      "gif": null
+    },
+    {
+      "name": "Bitcoin Pizza Day",
+      "date": "05-22",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍕",
+      "region": "global",
+      "status": "10K BTC FOR PIZZA",
+      "gif": null
+    },
+    {
+      "name": "International Women's Day",
+      "date": "03-08",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "💜",
+      "region": "global",
+      "status": "RESPECTING",
+      "gif": null
+    },
+    {
+      "name": "Earth Day",
+      "date": "04-22",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "🌍",
+      "region": "global",
+      "status": "ECO MODE",
+      "gif": null
+    },
+    {
+      "name": "Ching Ming Festival",
+      "date": "2025-04-04",
+      "type": "lunar",
+      "priority": 2,
+      "emoji": "🙏",
+      "region": "hk",
+      "status": "REMEMBERING",
+      "gif": null
+    },
+    {
+      "name": "Buddha's Birthday",
+      "date": "2025-05-05",
+      "type": "lunar",
+      "priority": 2,
+      "emoji": "🪷",
+      "region": "hk",
+      "status": "PEACEFUL",
+      "gif": null
+    },
+    {
+      "name": "Dragon Boat Festival",
+      "date": "2025-05-31",
+      "type": "lunar",
+      "priority": 1,
+      "emoji": "🐉",
+      "region": "hk",
+      "status": "RACING",
+      "gif": null
+    },
+    {
+      "name": "Mid-Autumn Festival",
+      "date": "2025-10-06",
+      "type": "lunar",
+      "priority": 1,
+      "emoji": "🥮",
+      "region": "hk",
+      "status": "MOONCAKE TIME",
+      "gif": null
+    },
+    {
+      "name": "Halloween",
+      "date": "10-31",
+      "type": "fixed",
+      "priority": 2,
+      "emoji": "🎃",
+      "region": "global",
+      "status": "SPOOKY",
+      "gif": null
+    },
+    {
+      "name": "Remembrance Day",
+      "date": "11-11",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "🌺",
+      "region": "global",
+      "status": "HONORING",
+      "gif": null
+    },
+    {
+      "name": "Christmas Eve",
+      "date": "12-24",
+      "type": "fixed",
+      "priority": 1,
+      "emoji": "🎄",
+      "region": "global",
+      "status": "FESTIVE",
+      "gif": null
+    },
+    {
+      "name": "Christmas",
+      "date": "12-25",
+      "type": "fixed",
+      "priority": 1,
+      "emoji": "🎅",
+      "region": "global",
+      "status": "MERRY",
+      "gif": null
+    },
+    {
+      "name": "World Mental Health Day",
+      "date": "10-10",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "💚",
+      "region": "global",
+      "status": "MINDFUL",
+      "gif": null
+    },
+    {
+      "name": "International Coffee Day",
+      "date": "10-01",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "☕",
+      "region": "global",
+      "status": "CAFFEINATED",
+      "gif": null
+    },
+    {
+      "name": "National Nap Day",
+      "date": "03-10",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "😴",
+      "region": "global",
+      "status": "SNOOZING",
+      "gif": null
+    },
+    {
+      "name": "World UFO Day",
+      "date": "07-02",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "👽",
+      "region": "global",
+      "status": "ABDUCTED",
+      "gif": null
+    },
+    {
+      "name": "National Donut Day",
+      "date": "06-06",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍩",
+      "region": "global",
+      "status": "GLAZED",
+      "gif": null
+    },
+    {
+      "name": "World Emoji Day",
+      "date": "07-17",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "😎",
+      "region": "global",
+      "status": "EXPRESSING",
+      "gif": null
+    },
+    {
+      "name": "International Cat Day",
+      "date": "08-08",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "🐱",
+      "region": "global",
+      "status": "MEOWING",
+      "gif": null
+    },
+    {
+      "name": "International Dog Day",
+      "date": "08-26",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "🐕",
+      "region": "global",
+      "status": "BARKING",
+      "gif": null
+    },
+    {
+      "name": "National Taco Day",
+      "date": "10-04",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🌮",
+      "region": "global",
+      "status": "CRUNCHING",
+      "gif": null
+    },
+    {
+      "name": "National Pizza Day",
+      "date": "02-09",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍕",
+      "region": "global",
+      "status": "CHEESY",
+      "gif": null
+    },
+    {
+      "name": "World Chocolate Day",
+      "date": "07-07",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍫",
+      "region": "global",
+      "status": "MELTING",
+      "gif": null
+    },
+    {
+      "name": "National Ice Cream Day",
+      "date": "07-21",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍦",
+      "region": "global",
+      "status": "BRAIN FREEZE",
+      "gif": null
+    },
+    {
+      "name": "Full Moon",
+      "date": "2026-01-13",
+      "type": "lunar",
+      "priority": 4,
+      "emoji": "🌕",
+      "region": "global",
+      "status": "HOWLING",
+      "gif": null
+    },
+    {
+      "name": "April 15 Tax Day",
+      "date": "04-15",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "💸",
+      "region": "us",
+      "status": "BROKE",
+      "gif": null
+    },
+    {
+      "name": "National Lazy Day",
+      "date": "08-10",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🛋️",
+      "region": "global",
+      "status": "VIBING",
+      "gif": null
+    },
+    {
+      "name": "World Music Day",
+      "date": "06-21",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🎵",
+      "region": "global",
+      "status": "GROOVING",
+      "gif": null
+    },
+    {
+      "name": "Summer Solstice",
+      "date": "06-21",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "☀️",
+      "region": "global",
+      "status": "LONGEST DAY",
+      "gif": null
+    },
+    {
+      "name": "Winter Solstice",
+      "date": "12-21",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "❄️",
+      "region": "global",
+      "status": "SHORTEST DAY",
+      "gif": null
+    },
+    {
+      "name": "National Pancake Day",
+      "date": "02-25",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🥞",
+      "region": "global",
+      "status": "FLIPPING",
+      "gif": null
+    },
+    {
+      "name": "World Nutella Day",
+      "date": "02-05",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍫",
+      "region": "global",
+      "status": "SPREADING",
+      "gif": null
+    },
+    {
+      "name": "National Video Games Day",
+      "date": "09-12",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🎮",
+      "region": "global",
+      "status": "GAMING",
+      "gif": null
+    },
+    {
+      "name": "World Whisky Day",
+      "date": "05-17",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🥃",
+      "region": "global",
+      "status": "SIPPIN",
+      "gif": null
+    },
+    {
+      "name": "National Beer Day",
+      "date": "04-07",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍺",
+      "region": "global",
+      "status": "CHEERS",
+      "gif": null
+    },
+    {
+      "name": "World Party Day",
+      "date": "04-03",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🎉",
+      "region": "global",
+      "status": "PARTYING",
+      "gif": null
+    },
+    {
+      "name": "Towel Day",
+      "date": "05-25",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🧺",
+      "region": "global",
+      "status": "DON'T PANIC",
+      "gif": null
+    },
+    {
+      "name": "International Joke Day",
+      "date": "07-01",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "😂",
+      "region": "global",
+      "status": "LAUGHING",
+      "gif": null
+    },
+    {
+      "name": "World Photography Day",
+      "date": "08-19",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "📸",
+      "region": "global",
+      "status": "SAY CHEESE",
+      "gif": null
+    },
+    {
+      "name": "Batman Day",
+      "date": "09-21",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦇",
+      "region": "global",
+      "status": "I'M BATMAN",
+      "gif": null
+    },
+    {
+      "name": "Back to the Future Day",
+      "date": "10-21",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "⚡",
+      "region": "global",
+      "status": "1.21 GIGAWATTS",
+      "gif": null
+    },
+    {
+      "name": "Singles Day",
+      "date": "11-11",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "💔",
+      "region": "global",
+      "status": "INDEPENDENT",
+      "gif": null
+    },
+    {
+      "name": "Cyber Monday",
+      "date": "2026-11-30",
+      "type": "lunar",
+      "priority": 3,
+      "emoji": "💻",
+      "region": "global",
+      "status": "ADD TO CART",
+      "gif": null
+    },
+    {
+      "name": "National Bagel Day",
+      "date": "01-15",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🥯",
+      "region": "global",
+      "status": "SCHMEARING",
+      "gif": null
+    },
+    {
+      "name": "National Cheese Lovers Day",
+      "date": "01-20",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🧀",
+      "region": "global",
+      "status": "GOUDA VIBES",
+      "gif": null
+    },
+    {
+      "name": "Bubble Wrap Appreciation Day",
+      "date": "01-27",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "💭",
+      "region": "global",
+      "status": "POP POP POP",
+      "gif": null
+    },
+    {
+      "name": "National Opposite Day",
+      "date": "01-25",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🔄",
+      "region": "global",
+      "status": "OR IS IT?",
+      "gif": null
+    },
+    {
+      "name": "Groundhog Day",
+      "date": "02-02",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🐿️",
+      "region": "us",
+      "status": "DEJA VU",
+      "gif": null
+    },
+    {
+      "name": "National Margarita Day",
+      "date": "02-22",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍹",
+      "region": "global",
+      "status": "SALT RIM",
+      "gif": null
+    },
+    {
+      "name": "World Sleep Day",
+      "date": "03-14",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "💤",
+      "region": "global",
+      "status": "ZZZ",
+      "gif": null
+    },
+    {
+      "name": "International Waffle Day",
+      "date": "03-25",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🧇",
+      "region": "global",
+      "status": "CRISPY",
+      "gif": null
+    },
+    {
+      "name": "National Unicorn Day",
+      "date": "04-09",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦄",
+      "region": "global",
+      "status": "MAGICAL",
+      "gif": null
+    },
+    {
+      "name": "National Superhero Day",
+      "date": "04-28",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦸",
+      "region": "global",
+      "status": "HEROIC",
+      "gif": null
+    },
+    {
+      "name": "No Pants Day",
+      "date": "05-02",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "👖",
+      "region": "global",
+      "status": "FREE",
+      "gif": null
+    },
+    {
+      "name": "Lost Sock Memorial Day",
+      "date": "05-09",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🧦",
+      "region": "global",
+      "status": "WHERE IS IT",
+      "gif": null
+    },
+    {
+      "name": "World Turtle Day",
+      "date": "05-23",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🐢",
+      "region": "global",
+      "status": "SLOW MODE",
+      "gif": null
+    },
+    {
+      "name": "National Dinosaur Day",
+      "date": "06-01",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦖",
+      "region": "global",
+      "status": "RAWR",
+      "gif": null
+    },
+    {
+      "name": "National Best Friends Day",
+      "date": "06-08",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "👯",
+      "region": "global",
+      "status": "BFF",
+      "gif": null
+    },
+    {
+      "name": "World Giraffe Day",
+      "date": "06-21",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦒",
+      "region": "global",
+      "status": "TALL BOI",
+      "gif": null
+    },
+    {
+      "name": "National Sunglasses Day",
+      "date": "06-27",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "😎",
+      "region": "global",
+      "status": "SHADY",
+      "gif": null
+    },
+    {
+      "name": "World Snake Day",
+      "date": "07-16",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🐍",
+      "region": "global",
+      "status": "SSSS",
+      "gif": null
+    },
+    {
+      "name": "National Hot Dog Day",
+      "date": "07-23",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🌭",
+      "region": "global",
+      "status": "GLIZZY",
+      "gif": null
+    },
+    {
+      "name": "System Administrator Day",
+      "date": "07-31",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "💾",
+      "region": "global",
+      "status": "SUDO",
+      "gif": null
+    },
+    {
+      "name": "World Lizard Day",
+      "date": "08-14",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦎",
+      "region": "global",
+      "status": "BASKING",
+      "gif": null
+    },
+    {
+      "name": "National Bacon Day",
+      "date": "09-05",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🥓",
+      "region": "global",
+      "status": "SIZZLING",
+      "gif": null
+    },
+    {
+      "name": "World Octopus Day",
+      "date": "10-08",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🐙",
+      "region": "global",
+      "status": "TENTACLES",
+      "gif": null
+    },
+    {
+      "name": "National Fossil Day",
+      "date": "10-16",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦴",
+      "region": "global",
+      "status": "ANCIENT",
+      "gif": null
+    },
+    {
+      "name": "National Pumpkin Day",
+      "date": "10-26",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🎃",
+      "region": "global",
+      "status": "GOURD TIMES",
+      "gif": null
+    },
+    {
+      "name": "National Candy Day",
+      "date": "11-04",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍬",
+      "region": "global",
+      "status": "SUGAR RUSH",
+      "gif": null
+    },
+    {
+      "name": "World Kindness Day",
+      "date": "11-13",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "💖",
+      "region": "global",
+      "status": "BE NICE",
+      "gif": null
+    },
+    {
+      "name": "National Gaming Day",
+      "date": "11-08",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🕹️",
+      "region": "global",
+      "status": "PRESS START",
+      "gif": null
+    },
+    {
+      "name": "Cookie Day",
+      "date": "12-04",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍪",
+      "region": "global",
+      "status": "CRUNCHY",
+      "gif": null
+    },
+    {
+      "name": "Pretend to be a Time Traveler Day",
+      "date": "12-08",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "⏰",
+      "region": "global",
+      "status": "FROM THE FUTURE",
+      "gif": null
+    },
+    {
+      "name": "National Llama Day",
+      "date": "12-09",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦙",
+      "region": "global",
+      "status": "SPITTING",
+      "gif": null
+    },
+    {
+      "name": "Festivus",
+      "date": "12-23",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🎄",
+      "region": "global",
+      "status": "FEATS OF STRENGTH",
+      "gif": null
+    },
+    {
+      "name": "Boxing Day",
+      "date": "12-26",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "🥊",
+      "region": "global",
+      "status": "BOXING",
+      "gif": null
+    },
+    {
+      "name": "Make Up Your Own Holiday Day",
+      "date": "03-26",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🎊",
+      "region": "global",
+      "status": "INVENTING",
+      "gif": null
+    },
+    {
+      "name": "World Frog Day",
+      "date": "03-20",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🐸",
+      "region": "global",
+      "status": "RIBBIT",
+      "gif": null
+    },
+    {
+      "name": "International Sloth Day",
+      "date": "10-20",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦥",
+      "region": "global",
+      "status": "CHILLIN",
+      "gif": null
+    },
+    {
+      "name": "World Bee Day",
+      "date": "05-20",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🐝",
+      "region": "global",
+      "status": "BUZZING",
+      "gif": null
+    },
+    {
+      "name": "National Astronaut Day",
+      "date": "05-05",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "👨‍🚀",
+      "region": "global",
+      "status": "TO THE MOON",
+      "gif": null
+    },
+    {
+      "name": "World Ocean Day",
+      "date": "06-08",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🌊",
+      "region": "global",
+      "status": "MAKING WAVES",
+      "gif": null
+    },
+    {
+      "name": "Global Running Day",
+      "date": "06-05",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🏃",
+      "region": "global",
+      "status": "ZOOMING",
+      "gif": null
+    },
+    {
+      "name": "World Penguin Day",
+      "date": "04-25",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🐧",
+      "region": "global",
+      "status": "WADDLING",
+      "gif": null
+    },
+    {
+      "name": "World Migratory Bird Day",
+      "date": "05-11",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦅",
+      "region": "global",
+      "status": "FLYING SOUTH",
+      "gif": null
+    },
+    {
+      "name": "World Elephant Day",
+      "date": "08-12",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🐘",
+      "region": "global",
+      "status": "NEVER FORGET",
+      "gif": null
+    },
+    {
+      "name": "World Lion Day",
+      "date": "08-10",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🦁",
+      "region": "global",
+      "status": "ROARING",
+      "gif": null
+    },
+    {
+      "name": "International Sushi Day",
+      "date": "06-18",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍣",
+      "region": "global",
+      "status": "ROLLING",
+      "gif": null
+    },
+    {
+      "name": "National Ramen Day",
+      "date": "04-04",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍜",
+      "region": "global",
+      "status": "SLURPING",
+      "gif": null
+    },
+    {
+      "name": "National Burrito Day",
+      "date": "04-02",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🌯",
+      "region": "global",
+      "status": "WRAPPED",
+      "gif": null
+    },
+    {
+      "name": "National Croissant Day",
+      "date": "01-30",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🥐",
+      "region": "global",
+      "status": "FLAKY",
+      "gif": null
+    },
+    {
+      "name": "International Lego Day",
+      "date": "01-28",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🧱",
+      "region": "global",
+      "status": "BUILDING",
+      "gif": null
+    },
+    {
+      "name": "World Robot Day",
+      "date": "02-07",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🤖",
+      "region": "global",
+      "status": "BEEP BOOP",
+      "gif": null
+    },
+    {
+      "name": "National Science Fiction Day",
+      "date": "01-02",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "🚀",
+      "region": "global",
+      "status": "EXPLORING",
+      "gif": null
+    },
+    {
+      "name": "Ethereum Birthday",
+      "date": "07-30",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "⟠",
+      "region": "global",
+      "status": "VITALIK BLESSED",
+      "gif": null
+    },
+    {
+      "name": "Bitcoin Whitepaper Day",
+      "date": "10-31",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "₿",
+      "region": "global",
+      "status": "SATOSHI",
+      "gif": null
+    },
+    {
+      "name": "National Avocado Day",
+      "date": "07-31",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🥑",
+      "region": "global",
+      "status": "GUAC",
+      "gif": null
+    },
+    {
+      "name": "World Meme Day",
+      "date": "06-28",
+      "type": "fixed",
+      "priority": 3,
+      "emoji": "🐸",
+      "region": "global",
+      "status": "FEELS GOOD MAN",
+      "gif": null
+    },
+    {
+      "name": "Programmer's Day",
+      "date": "09-13",
+      "type": "fixed",
+      "priority": 4,
+      "emoji": "👨‍💻",
+      "region": "global",
+      "status": "DEBUG MODE",
+      "gif": null
+    },
+    {
+      "name": "World Pasta Day",
+      "date": "10-25",
+      "type": "fixed",
+      "priority": 5,
+      "emoji": "🍝",
+      "region": "global",
+      "status": "AL DENTE",
+      "gif": null
+    }
+  ],
+  "defaults": {
+    "morning": {
+      "hours": [6, 11],
+      "status": "WAKING UP",
+      "mood": "MORNING",
+      "emoji": "🌅",
+      "gif": "morning.gif"
+    },
+    "afternoon": {
+      "hours": [12, 17],
+      "status": "WORKING",
+      "mood": "AFTERNOON",
+      "emoji": "☀️",
+      "gif": "afternoon.gif"
+    },
+    "evening": {
+      "hours": [18, 21],
+      "status": "CHILLING",
+      "mood": "EVENING",
+      "emoji": "🌆",
+      "gif": "evening.gif"
+    },
+    "night": {
+      "hours": [22, 5],
+      "status": "SLEEPY",
+      "mood": "NIGHT",
+      "emoji": "🌙",
+      "gif": "night.gif"
+    }
+  }
+}

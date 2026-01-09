@@ -1,0 +1,560 @@
+{
+  "version": "2.0",
+  "config": {
+    "rotationInterval": 10000,
+    "poolSize": 30,
+    "gifDuration": 6000,
+    "basePath": "images/tofu/gifs/"
+  },
+  "gifs": [
+    {
+      "file": "tofu_animated_00001.gif",
+      "activity": "sitting",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral", "great"],
+      "events": [],
+      "tags": ["happy", "simple", "yellow-bg"]
+    },
+    {
+      "file": "tofu_animated_00002.gif",
+      "activity": "working",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["office", "desk", "bowtie", "glasses"]
+    },
+    {
+      "file": "tofu_animated_00003.gif",
+      "activity": "trading",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral", "choppy"],
+      "events": [],
+      "tags": ["trading-room", "screens", "glasses", "work"]
+    },
+    {
+      "file": "tofu_animated_00004.gif",
+      "activity": "walking",
+      "time": ["night", "evening"],
+      "mood": ["bad", "muted"],
+      "events": [],
+      "tags": ["rain", "umbrella", "sad", "night"]
+    },
+    {
+      "file": "tofu_animated_00005.gif",
+      "activity": "floating",
+      "time": ["night"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["space", "astronaut", "stars", "dreaming"]
+    },
+    {
+      "file": "tofu_animated_00006.gif",
+      "activity": "chilling",
+      "time": ["afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["pool", "sunglasses", "bandana", "vacation"]
+    },
+    {
+      "file": "tofu_animated_00007.gif",
+      "activity": "relaxing",
+      "time": ["evening", "night"],
+      "mood": ["neutral", "muted"],
+      "events": [],
+      "tags": ["couch", "snacks", "drink", "chill"]
+    },
+    {
+      "file": "tofu_animated_00008.gif",
+      "activity": "surfing",
+      "time": ["afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["beach", "surfing", "sunglasses", "waves"]
+    },
+    {
+      "file": "tofu_animated_00009.gif",
+      "activity": "celebrating",
+      "time": ["night"],
+      "mood": ["great", "neutral"],
+      "events": ["new-year-s-eve", "new-year"],
+      "tags": ["wizard", "hat", "cape", "stars", "magical", "party"]
+    },
+    {
+      "file": "tofu_animated_00010.gif",
+      "activity": "gaming",
+      "time": ["evening", "night"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["gaming", "controller", "tv", "chill"]
+    },
+    {
+      "file": "tofu_animated_00011.gif",
+      "activity": "watching",
+      "time": ["evening"],
+      "mood": ["great", "neutral"],
+      "events": [],
+      "tags": ["beach", "sunset", "sunglasses", "chill"]
+    },
+    {
+      "file": "tofu_animated_00012.gif",
+      "activity": "surfing",
+      "time": ["evening"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["surfing", "sunset", "sunglasses", "waves"]
+    },
+    {
+      "file": "tofu_animated_00013.gif",
+      "activity": "watching",
+      "time": ["evening"],
+      "mood": ["great", "neutral"],
+      "events": [],
+      "tags": ["beach", "sunset", "sunglasses", "closeup"]
+    },
+    {
+      "file": "tofu_animated_00014.gif",
+      "activity": "sitting",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["beach", "sunglasses", "calm"]
+    },
+    {
+      "file": "tofu_animated_00015.gif",
+      "activity": "posing",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["portrait", "orange-bg", "simple"]
+    },
+    {
+      "file": "tofu_animated_00016.gif",
+      "activity": "relaxing",
+      "time": ["afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["beach", "towel", "lanterns", "vacation", "sunglasses"]
+    },
+    {
+      "file": "tofu_animated_00017.gif",
+      "activity": "partying",
+      "time": ["night"],
+      "mood": ["great"],
+      "events": ["new-year-s-eve", "new-year"],
+      "tags": ["cyberpunk", "headphones", "neon", "city", "party"]
+    },
+    {
+      "file": "tofu_animated_00018.gif",
+      "activity": "djing",
+      "time": ["night"],
+      "mood": ["great"],
+      "events": ["new-year-s-eve", "new-year"],
+      "tags": ["dj", "turntables", "party", "music"]
+    },
+    {
+      "file": "tofu_animated_00019.gif",
+      "activity": "chilling",
+      "time": ["evening", "night"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["arcade", "bar", "back-view"]
+    },
+    {
+      "file": "tofu_animated_00020.gif",
+      "activity": "eating",
+      "time": ["evening", "afternoon"],
+      "mood": ["neutral", "great"],
+      "events": [],
+      "tags": ["pizza", "cookie", "snacks", "eating"]
+    },
+    {
+      "file": "tofu_animated_00021.gif",
+      "activity": "working",
+      "time": ["morning"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["yellow", "lab", "science"]
+    },
+    {
+      "file": "tofu_animated_00022.gif",
+      "activity": "partying",
+      "time": ["night"],
+      "mood": ["great"],
+      "events": ["new-year-s-eve", "new-year"],
+      "tags": ["disco", "sparkle", "party", "glamour"]
+    },
+    {
+      "file": "tofu_animated_00023.gif",
+      "activity": "vibing",
+      "time": ["night"],
+      "mood": ["great"],
+      "events": ["new-year-s-eve", "new-year"],
+      "tags": ["vaporwave", "glitch", "neon", "psychedelic", "trippy", "party"]
+    },
+    {
+      "file": "tofu_animated_00024.gif",
+      "activity": "ascending",
+      "time": ["night"],
+      "mood": ["great"],
+      "events": ["new-year-s-eve", "new-year"],
+      "tags": ["cosmic", "particles", "psychedelic", "trippy", "party", "lights"]
+    },
+    {
+      "file": "tofu_animated_00025.gif",
+      "activity": "posing",
+      "time": ["morning", "afternoon", "evening"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["rainbow", "colorful", "happy", "bright"]
+    },
+    {
+      "file": "tofu_animated_00026.gif",
+      "activity": "celebrating",
+      "time": ["night"],
+      "mood": ["great"],
+      "events": ["new-year-s-eve", "new-year"],
+      "tags": ["balloons", "party", "celebration", "festive"]
+    },
+    {
+      "file": "tofu_animated_00027.gif",
+      "activity": "trading",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral", "choppy"],
+      "events": [],
+      "tags": ["server-room", "data-center", "screens", "tech", "trading"]
+    },
+    {
+      "file": "tofu_animated_00028.gif",
+      "activity": "walking",
+      "time": ["night"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["moon", "night", "walking", "chill", "dark"]
+    },
+    {
+      "file": "tofu_animated_00029.gif",
+      "activity": "posing",
+      "time": ["morning", "afternoon", "evening", "night"],
+      "mood": ["great"],
+      "events": ["new-year-s-eve", "new-year"],
+      "tags": ["angel", "wings", "fancy", "celebration", "divine", "party"]
+    },
+    {
+      "file": "tofu_animated_00030.gif",
+      "activity": "flexing",
+      "time": ["morning", "afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["gold", "coins", "money", "rich", "treasure", "prosperity", "winning"]
+    },
+    {
+      "file": "tofu_animated_00031.gif",
+      "activity": "vibing",
+      "time": ["evening", "night"],
+      "mood": ["great", "neutral"],
+      "events": [],
+      "tags": ["chill", "relaxed", "vibes"]
+    },
+    {
+      "file": "tofu_animated_00032.gif",
+      "activity": "exploring",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral", "great"],
+      "events": [],
+      "tags": ["adventure", "curious"]
+    },
+    {
+      "file": "tofu_animated_00033.gif",
+      "activity": "dancing",
+      "time": ["night"],
+      "mood": ["great"],
+      "events": ["new-year-s-eve", "new-year"],
+      "tags": ["party", "dance", "celebration"]
+    },
+    {
+      "file": "tofu_animated_00034.gif",
+      "activity": "meditating",
+      "time": ["morning"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["zen", "peaceful", "calm"]
+    },
+    {
+      "file": "tofu_animated_00035.gif",
+      "activity": "flying",
+      "time": ["afternoon", "evening"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["sky", "clouds", "freedom"]
+    },
+    {
+      "file": "tofu_animated_00036.gif",
+      "activity": "cooking",
+      "time": ["morning", "evening"],
+      "mood": ["neutral", "great"],
+      "events": [],
+      "tags": ["chef", "food", "kitchen"]
+    },
+    {
+      "file": "tofu_animated_00037.gif",
+      "activity": "reading",
+      "time": ["afternoon", "evening"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["books", "cozy", "learning"]
+    },
+    {
+      "file": "tofu_animated_00038.gif",
+      "activity": "skateboarding",
+      "time": ["afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["skate", "tricks", "cool"]
+    },
+    {
+      "file": "tofu_animated_00039.gif",
+      "activity": "painting",
+      "time": ["afternoon"],
+      "mood": ["neutral", "great"],
+      "events": [],
+      "tags": ["art", "creative", "colorful"]
+    },
+    {
+      "file": "tofu_animated_00040.gif",
+      "activity": "sleeping",
+      "time": ["night"],
+      "mood": ["neutral", "muted"],
+      "events": [],
+      "tags": ["zzz", "dreaming", "cozy"]
+    },
+    {
+      "file": "tofu_animated_00041.gif",
+      "activity": "exercising",
+      "time": ["morning"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["fitness", "gym", "strong"]
+    },
+    {
+      "file": "tofu_animated_00042.gif",
+      "activity": "fishing",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["lake", "peaceful", "patience"]
+    },
+    {
+      "file": "tofu_animated_00043.gif",
+      "activity": "camping",
+      "time": ["evening", "night"],
+      "mood": ["neutral", "great"],
+      "events": [],
+      "tags": ["campfire", "nature", "stars"]
+    },
+    {
+      "file": "tofu_animated_00044.gif",
+      "activity": "driving",
+      "time": ["afternoon", "evening"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["car", "road-trip", "cool"]
+    },
+    {
+      "file": "tofu_animated_00045.gif",
+      "activity": "singing",
+      "time": ["evening", "night"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["karaoke", "music", "fun"]
+    },
+    {
+      "file": "tofu_animated_00046.gif",
+      "activity": "snowboarding",
+      "time": ["afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["winter", "snow", "extreme"]
+    },
+    {
+      "file": "tofu_animated_00047.gif",
+      "activity": "gardening",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral", "great"],
+      "events": [],
+      "tags": ["plants", "nature", "peaceful"]
+    },
+    {
+      "file": "tofu_animated_00048.gif",
+      "activity": "baking",
+      "time": ["morning", "afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["cookies", "sweet", "kitchen"]
+    },
+    {
+      "file": "tofu_animated_00049.gif",
+      "activity": "stargazing",
+      "time": ["night"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["stars", "telescope", "cosmos"]
+    },
+    {
+      "file": "tofu_animated_00050.gif",
+      "activity": "jumping",
+      "time": ["afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["trampoline", "bouncy", "fun"]
+    },
+    {
+      "file": "tofu_animated_00051.gif",
+      "activity": "sailing",
+      "time": ["afternoon"],
+      "mood": ["great", "neutral"],
+      "events": [],
+      "tags": ["boat", "ocean", "adventure"]
+    },
+    {
+      "file": "tofu_animated_00052.gif",
+      "activity": "rocking",
+      "time": ["night"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["guitar", "music", "rock"]
+    },
+    {
+      "file": "tofu_animated_00053.gif",
+      "activity": "magic",
+      "time": ["evening", "night"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["wizard", "spells", "mystical"]
+    },
+    {
+      "file": "tofu_animated_00054.gif",
+      "activity": "boxing",
+      "time": ["afternoon"],
+      "mood": ["great", "choppy"],
+      "events": [],
+      "tags": ["fight", "strong", "training"]
+    },
+    {
+      "file": "tofu_animated_00055.gif",
+      "activity": "scuba",
+      "time": ["afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["underwater", "ocean", "fish"]
+    },
+    {
+      "file": "tofu_animated_00056.gif",
+      "activity": "racing",
+      "time": ["afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["speed", "kart", "fast"]
+    },
+    {
+      "file": "tofu_animated_00057.gif",
+      "activity": "building",
+      "time": ["morning", "afternoon"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["lego", "construction", "creative"]
+    },
+    {
+      "file": "tofu_animated_00058.gif",
+      "activity": "superhero",
+      "time": ["afternoon", "night"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["cape", "flying", "hero"]
+    },
+    {
+      "file": "tofu_animated_00059.gif",
+      "activity": "pirate",
+      "time": ["afternoon"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["ship", "treasure", "yarrr"]
+    },
+    {
+      "file": "tofu_animated_00060.gif",
+      "activity": "ninja",
+      "time": ["night"],
+      "mood": ["neutral", "great"],
+      "events": [],
+      "tags": ["stealth", "katana", "cool"]
+    },
+    {
+      "file": "tofu_animated_00061.gif",
+      "activity": "detective",
+      "time": ["evening", "night"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["mystery", "magnifying-glass", "noir"]
+    },
+    {
+      "file": "tofu_animated_00062.gif",
+      "activity": "cowboy",
+      "time": ["afternoon", "evening"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["western", "hat", "desert"]
+    },
+    {
+      "file": "tofu_animated_00063.gif",
+      "activity": "astronaut",
+      "time": ["night"],
+      "mood": ["great"],
+      "events": [],
+      "tags": ["space", "moon", "explorer"]
+    },
+    {
+      "file": "tofu_animated_00064.gif",
+      "activity": "robot",
+      "time": ["afternoon", "evening"],
+      "mood": ["neutral"],
+      "events": [],
+      "tags": ["mech", "futuristic", "beep-boop"]
+    },
+    {
+      "file": "tofu_animated_00065.gif",
+      "activity": "viking",
+      "time": ["afternoon"],
+      "mood": ["great", "choppy"],
+      "events": [],
+      "tags": ["helmet", "axe", "warrior"]
+    },
+    {
+      "file": "tofu_animated_00066.gif",
+      "activity": "samurai",
+      "time": ["evening"],
+      "mood": ["neutral", "great"],
+      "events": [],
+      "tags": ["sword", "honor", "japanese"]
+    },
+    {
+      "file": "tofu_animated_00067.gif",
+      "activity": "vampire",
+      "time": ["night"],
+      "mood": ["muted", "bad"],
+      "events": ["halloween"],
+      "tags": ["spooky", "fangs", "cape"]
+    },
+    {
+      "file": "tofu_animated_00068.gif",
+      "activity": "zombie",
+      "time": ["night"],
+      "mood": ["bad", "muted"],
+      "events": ["halloween"],
+      "tags": ["undead", "spooky", "horror"]
+    }
+  ],
+  "schema": {
+    "time": ["morning", "afternoon", "evening", "night"],
+    "mood": ["neutral", "muted", "choppy", "bad", "great"],
+    "events": ["cny", "christmas", "newyear", "halloween", "valentines", "mid-autumn", "easter", "buddha", "dragon-boat"]
+  }
+}
