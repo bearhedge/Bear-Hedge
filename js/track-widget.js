@@ -283,12 +283,10 @@ const TrackWidget = {
             <div>
               <span style="font-size: 13px; font-weight: 600; color: #fff;">Day ${dayNum}</span>
               <span style="font-size: 11px; color: #555; margin-left: 8px;">${this.formatShortDate(current.todayStr)}</span>
-              <span style="font-size: 9px; padding: 1px 6px; background: rgba(245, 158, 11, 0.2); color: #f59e0b; border-radius: 3px; margin-left: 6px;">LIVE</span>
             </div>
-            <div style="text-align: right; font-size: 11px; line-height: 1.5;">
-              <div><span style="color: #666;">Sold</span> <span style="color: #fff;">HKD ${premiumSoldHKD.toFixed(0)}</span> <span style="color: #555;">(USD ${premiumSoldUSD.toFixed(0)})</span></div>
-              <div><span style="color: #666;">Now</span> <span style="color: #fff;">HKD ${costToCloseHKD.toFixed(0)}</span> <span style="color: #555;">(USD ${costToCloseUSD.toFixed(0)})</span></div>
-              <div><span style="color: #666;">P/L</span> <span style="color: #f59e0b; font-weight: 600;">HKD ${pnlHKD.toFixed(0)}</span> <span style="color: #555;">(USD ${pnlUSD.toFixed(0)})</span></div>
+            <div style="text-align: right;">
+              <div style="font-size: 14px; font-weight: 600; color: #f59e0b;">HKD ${premiumSoldHKD.toFixed(0)}</div>
+              <div style="font-size: 10px; color: #555;">USD ${premiumSoldUSD.toFixed(0)} premium</div>
             </div>
           </div>
 
