@@ -139,14 +139,15 @@ const TrackWidget = {
     let html = `<div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px;">`;
 
     // === STREAK HEADER ===
-    // Include today's unrealized P&L if there's a live trade
-    const todayPnlHKD = (current && current.hasTrade && current.trade) ? (current.trade.totalPremiumHKD || 0) : 0;
-    const todayPnlUSD = (current && current.hasTrade && current.trade) ? (current.trade.totalPremiumUSD || 0) : 0;
+    // Include today's unrealized P&L if there's a truly open live trade
+    const hasOpenTrade = current && current.hasTrade && current.trade && current.trade.isOpen && current.trade.status === 'open';
+    const todayPnlHKD = hasOpenTrade ? (current.trade.totalPremiumHKD || 0) : 0;
+    const todayPnlUSD = hasOpenTrade ? (current.trade.totalPremiumUSD || 0) : 0;
     const totalHKD = accumulatedHKD + todayPnlHKD;
     const totalUSD = accumulatedUSD + todayPnlUSD;
-    const displayDays = (current && current.hasTrade) ? streakLength + 1 : streakLength;
+    const displayDays = hasOpenTrade ? streakLength + 1 : streakLength;
 
-    if (streakLength > 0 || (current && current.hasTrade)) {
+    if (streakLength > 0 || hasOpenTrade) {
       html += `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #333;">
           <div>
@@ -205,7 +206,7 @@ const TrackWidget = {
               </div>
               <div>
                 <span style="color: #555;">Strikes</span>
-                <span style="color: #888; margin-left: 4px;">${trade.putStrike || '-'}P / ${trade.callStrike || '-'}C</span>
+                <span style="color: #888; margin-left: 4px;">${trade.putStrike ? trade.putStrike + 'P' : ''}${trade.putStrike && trade.callStrike ? ' / ' : ''}${trade.callStrike ? trade.callStrike + 'C' : ''}</span>
               </div>
               <div style="text-align: right;">
                 <span style="color: #555;">Contracts</span>
@@ -234,8 +235,9 @@ const TrackWidget = {
       });
     }
 
-    // === DAY 2: LIVE TRADE (show as next day in streak format) ===
-    if (current && current.hasTrade && current.trade) {
+    // === LIVE TRADE (show as next day in streak format) ===
+    // Only show if trade is truly open (not expired/closed)
+    if (current && current.hasTrade && current.trade && current.trade.isOpen && current.trade.status === 'open') {
       const t = current.trade;
       const dayNum = streakLength + 1;
       const pnlHKD = t.totalPremiumHKD || 0;
@@ -302,7 +304,7 @@ const TrackWidget = {
             </div>
             <div>
               <span style="color: #555;">Strikes</span>
-              <span style="color: #888; margin-left: 4px;">${putStrike || '-'}P / ${callStrike || '-'}C</span>
+              <span style="color: #888; margin-left: 4px;">${putStrike ? putStrike + 'P' : ''}${putStrike && callStrike ? ' / ' : ''}${callStrike ? callStrike + 'C' : ''}</span>
             </div>
             <div style="text-align: right;">
               <span style="color: #555;">Contracts</span>
