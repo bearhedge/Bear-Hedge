@@ -6,6 +6,11 @@ const TrackWidget = {
   API_BASE: 'https://apeyolo.com',
   updateInterval: 30000,
 
+  // Format number with commas (e.g., 2285 -> "2,285")
+  formatNumber(num) {
+    return Math.round(num).toLocaleString();
+  },
+
   async init() {
     console.log('Track Widget: Initializing...');
     await this.fetchAndRender();
@@ -128,12 +133,14 @@ const TrackWidget = {
     const streakTrades = this.calculateStreak(trades);
     const streakLength = streakTrades.length;
 
-    // Calculate accumulated P&L for streak (use premiumReceived for USD, entryPremium for HKD)
+    // Calculate accumulated P&L and notional for streak
     let accumulatedUSD = 0;
     let accumulatedHKD = 0;
+    let accumulatedNotional = 0;
     for (const t of streakTrades) {
       accumulatedUSD += t.premiumReceived || 0;
       accumulatedHKD += t.entryPremium || 0;
+      accumulatedNotional += t.totalNotionalHKD || 0;
     }
 
     let html = `<div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px;">`;
@@ -147,6 +154,15 @@ const TrackWidget = {
     const totalUSD = accumulatedUSD + todayPnlUSD;
     const displayDays = hasOpenTrade ? streakLength + 1 : streakLength;
 
+    // Calculate today's notional for open trade
+    let todayNotional = 0;
+    if (hasOpenTrade && current.trade.legs) {
+      for (const leg of current.trade.legs) {
+        todayNotional += (leg.strike || 0) * (leg.contracts || 0) * 100 * 7.8;
+      }
+    }
+    const totalNotional = accumulatedNotional + todayNotional;
+
     if (streakLength > 0 || hasOpenTrade) {
       html += `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #333;">
@@ -155,9 +171,15 @@ const TrackWidget = {
             <div style="font-size: 20px; font-weight: 600; color: #4ade80;">${displayDays} Day${displayDays > 1 ? 's' : ''}</div>
           </div>
           <div style="text-align: right;">
-            <span style="font-size: 11px; color: #666; text-transform: uppercase;">Total</span>
-            <div style="font-size: 18px; font-weight: 600; color: #4ade80;">HKD ${totalHKD.toFixed(0)}</div>
-            <div style="font-size: 11px; color: #666;">USD ${totalUSD.toFixed(0)}${todayPnlUSD > 0 ? ' (incl. unrealized)' : ''}</div>
+            <span style="font-size: 11px; color: #666; text-transform: uppercase;">Total P&L</span>
+            <div style="font-size: 18px; font-weight: 600; color: #4ade80;">HKD ${this.formatNumber(totalHKD)}</div>
+            <div style="font-size: 11px; color: #666;">USD ${this.formatNumber(totalUSD)}${todayPnlUSD > 0 ? ' (incl. unrealized)' : ''}</div>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #333;">
+          <div>
+            <span style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Implied Notional</span>
+            <div style="font-size: 16px; font-weight: 500; color: #888;">HKD ${totalNotional.toLocaleString()}</div>
           </div>
         </div>
       `;
@@ -189,8 +211,8 @@ const TrackWidget = {
                 <span style="font-size: 11px; color: #555; margin-left: 8px;">${this.formatShortDate(trade.date)}</span>
               </div>
               <div style="text-align: right;">
-                <div style="font-size: 14px; font-weight: 600; color: #4ade80;">HKD ${pnlHKD.toFixed(0)}</div>
-                <div style="font-size: 10px; color: #555;">USD ${pnlUSD.toFixed(0)}</div>
+                <div style="font-size: 14px; font-weight: 600; color: #4ade80;">HKD ${this.formatNumber(pnlHKD)}</div>
+                <div style="font-size: 10px; color: #555;">USD ${this.formatNumber(pnlUSD)}</div>
               </div>
             </div>
 
@@ -212,13 +234,22 @@ const TrackWidget = {
                 <span style="color: #555;">Contracts</span>
                 <span style="color: #888; margin-left: 4px;">${this.getContractsBreakdown(trade)}</span>
               </div>
+              <div>
+                <span style="color: #555;">Implied Notional</span>
+              </div>
+              <div style="text-align: right;">
+                <span style="color: #888;">HKD ${(trade.totalNotionalHKD || 0).toLocaleString()}</span>
+              </div>
             </div>
 
-            <!-- Premium per leg -->
-            <div style="font-size: 10px; color: #444; margin-bottom: 8px;">
-              ${trade.leg1Premium ? `Put @${trade.leg1Premium.toFixed(3)}` : ''}
-              ${trade.leg1Premium && trade.leg2Premium ? ' · ' : ''}
-              ${trade.leg2Premium ? `Call @${trade.leg2Premium.toFixed(3)}` : ''}
+            <!-- Premium per leg + Stop loss -->
+            <div style="display: flex; justify-content: space-between; font-size: 10px; color: #444; margin-bottom: 8px;">
+              <span>
+                ${trade.leg1Premium ? `Put @${trade.leg1Premium.toFixed(3)}` : ''}
+                ${trade.leg1Premium && trade.leg2Premium ? ' · ' : ''}
+                ${trade.leg2Premium ? `Call @${trade.leg2Premium.toFixed(3)}` : ''}
+              </span>
+              ${trade.stopLossMultiplier ? `<span style="color: #666;">Stop: ${trade.stopLossMultiplier.toFixed(1)}x</span>` : ''}
             </div>
 
             <!-- Exit Status -->
@@ -287,8 +318,8 @@ const TrackWidget = {
               <span style="font-size: 11px; color: #555; margin-left: 8px;">${this.formatShortDate(current.todayStr)}</span>
             </div>
             <div style="text-align: right;">
-              <div style="font-size: 14px; font-weight: 600; color: #f59e0b;">HKD ${premiumSoldHKD.toFixed(0)}</div>
-              <div style="font-size: 10px; color: #555;">USD ${premiumSoldUSD.toFixed(0)} premium</div>
+              <div style="font-size: 14px; font-weight: 600; color: #f59e0b;">HKD ${this.formatNumber(premiumSoldHKD)}</div>
+              <div style="font-size: 10px; color: #555;">USD ${this.formatNumber(premiumSoldUSD)} premium</div>
             </div>
           </div>
 
@@ -310,13 +341,22 @@ const TrackWidget = {
               <span style="color: #555;">Contracts</span>
               <span style="color: #888; margin-left: 4px;">${contractsText}</span>
             </div>
+            <div>
+              <span style="color: #555;">Implied Notional</span>
+            </div>
+            <div style="text-align: right;">
+              <span style="color: #888;">HKD ${(((putStrike || 0) + (callStrike || 0)) * (t.contracts / (putStrike && callStrike ? 2 : 1)) * 100 * 7.8).toLocaleString()}</span>
+            </div>
           </div>
 
-          <!-- Premium per leg -->
-          <div style="font-size: 10px; color: #444; margin-bottom: 8px;">
-            ${leg1Premium ? `Put @${leg1Premium.toFixed(3)}` : ''}
-            ${leg1Premium && leg2Premium ? ' · ' : ''}
-            ${leg2Premium ? `Call @${leg2Premium.toFixed(3)}` : ''}
+          <!-- Premium per leg + Stop loss -->
+          <div style="display: flex; justify-content: space-between; font-size: 10px; color: #444; margin-bottom: 8px;">
+            <span>
+              ${leg1Premium ? `Put @${leg1Premium.toFixed(3)}` : ''}
+              ${leg1Premium && leg2Premium ? ' · ' : ''}
+              ${leg2Premium ? `Call @${leg2Premium.toFixed(3)}` : ''}
+            </span>
+            ${t.stopLossMultiplier ? `<span style="color: #666;">Stop: ${parseFloat(t.stopLossMultiplier).toFixed(1)}x</span>` : ''}
           </div>
 
           <!-- Status -->

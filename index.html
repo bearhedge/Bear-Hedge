@@ -925,68 +925,51 @@
     updateTime();
     setInterval(updateTime, 1000);
 
-    // Fetch S&P/VIX data - always show latest price
+    // Fetch S&P/VIX data from Yahoo Finance
     async function fetchMarketData() {
       const spxEl = document.getElementById('spx-value');
       const vixEl = document.getElementById('vix-value');
+      const spxLabelEl = document.querySelector('.market-item:first-child .market-label');
+      const vixLabelEl = document.querySelector('.market-item:nth-child(2) .market-label');
 
-      async function fetchQuote(symbol, el, formatWithComma) {
-        if (!el) return;
-
-        try {
-          // Use corsproxy.io with cache-busting timestamp
-          const timestamp = Date.now();
-          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1m&range=1d&t=${timestamp}`;
-          const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
-
-          const response = await fetch(proxyUrl, {
-            cache: 'no-store',
-            headers: { 'Cache-Control': 'no-cache' }
-          });
-          if (response.ok) {
-            const data = await response.json();
-            if (data.chart && data.chart.result && data.chart.result[0]) {
-              const result = data.chart.result[0];
-              const price = result.meta.regularMarketPrice;
-              const prevClose = result.meta.previousClose;
-              const change = ((price - prevClose) / prevClose * 100).toFixed(2);
-
-              const priceStr = formatWithComma
-                ? price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                : price.toFixed(2);
-
-              // Show absolute change, color entire item based on direction
-              // VIX is inverted: up = red (fear), down = green (calm)
-              const absChange = Math.abs(parseFloat(change)).toFixed(2);
-              const changeVal = parseFloat(change);
-              const changeStr = changeVal < 0 ? `(${absChange}%)` : `${absChange}%`;
-              el.textContent = `${priceStr} ${changeStr}`;
-              const isVix = symbol === '^VIX';
-              let direction = '';
-              if (changeVal > 0) {
-                direction = isVix ? 'down' : 'up';  // VIX up = bad (red)
-              } else if (changeVal < 0) {
-                direction = isVix ? 'up' : 'down';  // VIX down = good (green)
-              }
-              el.parentElement.className = 'market-item ' + direction;
-              console.log(`${symbol}: ${price} (${change}%)`);
-            }
-          }
-        } catch (e) {
-          console.log(`Failed to fetch ${symbol}:`, e.message);
-        }
+      function displayQuote(el, labelEl, price, prevClose, label, formatWithComma, isVixType) {
+        if (!el || !price) return;
+        const change = prevClose ? ((price - prevClose) / prevClose * 100) : 0;
+        const priceStr = formatWithComma
+          ? price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+          : price.toFixed(2);
+        const absChange = Math.abs(change).toFixed(2);
+        const changeStr = change < 0 ? `(${absChange}%)` : `${absChange}%`;
+        el.textContent = `${priceStr} ${changeStr}`;
+        if (labelEl) labelEl.textContent = label;
+        let direction = '';
+        if (change > 0) direction = isVixType ? 'down' : 'up';
+        else if (change < 0) direction = isVixType ? 'up' : 'down';
+        el.parentElement.className = 'market-item ' + direction;
       }
 
-      console.log('Fetching market data...');
+      async function fetchYahoo(symbol) {
+        try {
+          const cacheBust = Date.now();
+          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1m&range=1d&_=${cacheBust}`;
+          const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`, { cache: 'no-store' });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.chart?.result?.[0]?.meta) {
+              const m = data.chart.result[0].meta;
+              return { price: m.regularMarketPrice, prevClose: m.previousClose || m.chartPreviousClose };
+            }
+          }
+        } catch (e) { console.log(`Yahoo ${symbol} error:`, e.message); }
+        return null;
+      }
 
-      // ^GSPC = S&P 500 Index, ^VIX = VIX Index
-      await Promise.all([
-        fetchQuote('^GSPC', spxEl, true),
-        fetchQuote('^VIX', vixEl, false)
-      ]);
+      const [spyData, vixData] = await Promise.all([fetchYahoo('SPY'), fetchYahoo('^VIX')]);
+      console.log('Yahoo:', 'SPY:', spyData?.price, 'VIX:', vixData?.price);
+      if (spyData) displayQuote(spxEl, spxLabelEl, spyData.price, spyData.prevClose, 'SPY', true, false);
+      if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
     }
 
-    // Fetch market data every 5 seconds
     fetchMarketData();
     setInterval(fetchMarketData, 5000);
 
