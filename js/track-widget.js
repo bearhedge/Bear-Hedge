@@ -160,8 +160,7 @@ const TrackWidget = {
           </div>
           <div style="text-align: right;">
             <span style="font-size: 11px; color: #666; text-transform: uppercase;">Total P&L</span>
-            <div style="font-size: 18px; font-weight: 600; color: #4ade80;">HKD ${this.formatNumber(accumulatedHKD)}</div>
-            <div style="font-size: 11px; color: #666;">USD ${this.formatNumber(accumulatedUSD)}</div>
+            <div style="font-size: 18px; font-weight: 600; color: #4ade80;">HKD ${this.formatNumber(accumulatedHKD)} <span style="font-size: 11px; color: #666; font-weight: 400;">(USD ${this.formatNumber(accumulatedUSD)})</span></div>
           </div>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #333;">
@@ -183,14 +182,13 @@ const TrackWidget = {
     if (streakLength > 0) {
       streakTrades.forEach((trade, idx) => {
         const dayNum = idx + 1;
-        const isLatest = idx === streakTrades.length - 1;
         const pnlHKD = trade.entryPremium || 0;
         const pnlUSD = trade.premiumReceived || 0;
         const exitStatus = this.formatExitStatus(trade);
         const isStopped = exitStatus === 'Stopped';
 
         html += `
-          <div style="padding: 12px; margin-bottom: 8px; background: ${isLatest ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.02)'}; border-radius: 4px; ${isLatest ? 'border-left: 2px solid #4ade80;' : ''}">
+          <div style="padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.02); border-radius: 4px;">
 
             <!-- Header: Day + Date + P&L -->
             <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
@@ -198,10 +196,7 @@ const TrackWidget = {
                 <span style="font-size: 13px; font-weight: 600; color: #fff;">Day ${dayNum}</span>
                 <span style="font-size: 11px; color: #555; margin-left: 8px;">${this.formatShortDate(trade.date)}</span>
               </div>
-              <div style="text-align: right;">
-                <div style="font-size: 14px; font-weight: 600; color: #4ade80;">HKD ${this.formatNumber(pnlHKD)}</div>
-                <div style="font-size: 10px; color: #555;">USD ${this.formatNumber(pnlUSD)}</div>
-              </div>
+              <div style="font-size: 14px; font-weight: 600; color: #4ade80;">HKD ${this.formatNumber(pnlHKD)} <span style="font-size: 10px; color: #555; font-weight: 400;">(USD ${this.formatNumber(pnlUSD)})</span></div>
             </div>
 
             <!-- Trade Info Grid -->
@@ -301,10 +296,7 @@ const TrackWidget = {
               <span style="font-size: 13px; font-weight: 600; color: #fff;">Day ${dayNum}</span>
               <span style="font-size: 11px; color: #555; margin-left: 8px;">${this.formatShortDate(current.todayStr)}</span>
             </div>
-            <div style="text-align: right;">
-              <div style="font-size: 14px; font-weight: 600; color: #f59e0b;">HKD ${this.formatNumber(premiumSoldHKD)}</div>
-              <div style="font-size: 10px; color: #555;">USD ${this.formatNumber(premiumSoldUSD)} premium</div>
-            </div>
+            <div style="font-size: 14px; font-weight: 600; color: #f59e0b;">HKD ${this.formatNumber(premiumSoldHKD)} <span style="font-size: 10px; color: #555; font-weight: 400;">(USD ${this.formatNumber(premiumSoldUSD)})</span></div>
           </div>
 
           <!-- Trade Info Grid -->
