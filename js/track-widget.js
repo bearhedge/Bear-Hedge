@@ -146,22 +146,10 @@ const TrackWidget = {
     let html = `<div style="font-family: 'IBM Plex Mono', monospace; font-size: 13px;">`;
 
     // === STREAK HEADER ===
-    // Include today's unrealized P&L if there's a truly open live trade
+    // Only show realized P&L from closed trades
     const hasOpenTrade = current && current.hasTrade && current.trade && current.trade.isOpen && current.trade.status === 'open';
-    const todayPnlHKD = hasOpenTrade ? (current.trade.totalPremiumHKD || 0) : 0;
-    const todayPnlUSD = hasOpenTrade ? (current.trade.totalPremiumUSD || 0) : 0;
-    const totalHKD = accumulatedHKD + todayPnlHKD;
-    const totalUSD = accumulatedUSD + todayPnlUSD;
     const displayDays = hasOpenTrade ? streakLength + 1 : streakLength;
 
-    // Calculate today's notional for open trade
-    let todayNotional = 0;
-    if (hasOpenTrade && current.trade.legs) {
-      for (const leg of current.trade.legs) {
-        todayNotional += (leg.strike || 0) * (leg.contracts || 0) * 100 * 7.8;
-      }
-    }
-    const totalNotional = accumulatedNotional + todayNotional;
 
     if (streakLength > 0 || hasOpenTrade) {
       html += `
@@ -172,14 +160,14 @@ const TrackWidget = {
           </div>
           <div style="text-align: right;">
             <span style="font-size: 11px; color: #666; text-transform: uppercase;">Total P&L</span>
-            <div style="font-size: 18px; font-weight: 600; color: #4ade80;">HKD ${this.formatNumber(totalHKD)}</div>
-            <div style="font-size: 11px; color: #666;">USD ${this.formatNumber(totalUSD)}${todayPnlUSD > 0 ? ` (incl. USD ${this.formatNumber(todayPnlUSD)} unrealized)` : ''}</div>
+            <div style="font-size: 18px; font-weight: 600; color: #4ade80;">HKD ${this.formatNumber(accumulatedHKD)}</div>
+            <div style="font-size: 11px; color: #666;">USD ${this.formatNumber(accumulatedUSD)}</div>
           </div>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #333;">
           <div>
             <span style="font-size: 11px; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">Implied Notional</span>
-            <div style="font-size: 16px; font-weight: 500; color: #888;">HKD ${totalNotional.toLocaleString()}</div>
+            <div style="font-size: 16px; font-weight: 500; color: #888;">HKD ${accumulatedNotional.toLocaleString()}</div>
           </div>
         </div>
       `;
@@ -303,10 +291,6 @@ const TrackWidget = {
       } else if (callStrike) {
         contractsText = `${t.contracts}C`;
       }
-
-      // Also add today's unrealized to accumulated total display
-      const totalHKD = accumulatedHKD + pnlHKD;
-      const totalUSD = accumulatedUSD + pnlUSD;
 
       html += `
         <div style="padding: 12px; margin-bottom: 8px; background: rgba(245, 158, 11, 0.06); border-radius: 4px; border-left: 2px solid #f59e0b;">
