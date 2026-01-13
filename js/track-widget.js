@@ -173,7 +173,7 @@ const TrackWidget = {
           <div style="text-align: right;">
             <span style="font-size: 11px; color: #666; text-transform: uppercase;">Total P&L</span>
             <div style="font-size: 18px; font-weight: 600; color: #4ade80;">HKD ${this.formatNumber(totalHKD)}</div>
-            <div style="font-size: 11px; color: #666;">USD ${this.formatNumber(totalUSD)}${todayPnlUSD > 0 ? ' (incl. unrealized)' : ''}</div>
+            <div style="font-size: 11px; color: #666;">USD ${this.formatNumber(totalUSD)}</div>
           </div>
         </div>
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #333;">
