@@ -134,12 +134,14 @@ const TrackWidget = {
     const streakLength = streakTrades.length;
 
     // Calculate accumulated P&L and notional for streak
+    // For stopped trades, use realizedPnlUSD; for expired, use premiumReceived
     let accumulatedUSD = 0;
     let accumulatedHKD = 0;
     let accumulatedNotional = 0;
     for (const t of streakTrades) {
-      accumulatedUSD += t.premiumReceived || 0;
-      accumulatedHKD += t.entryPremium || 0;
+      const isStopped = t.status && t.status.toLowerCase().includes('stop');
+      accumulatedUSD += isStopped ? (t.realizedPnlUSD || 0) : (t.premiumReceived || 0);
+      accumulatedHKD += isStopped ? (t.realizedPnl || 0) : (t.entryPremium || 0);
       accumulatedNotional += t.totalNotionalHKD || 0;
     }
 
@@ -182,10 +184,11 @@ const TrackWidget = {
     if (streakLength > 0) {
       streakTrades.forEach((trade, idx) => {
         const dayNum = idx + 1;
-        const pnlHKD = trade.entryPremium || 0;
-        const pnlUSD = trade.premiumReceived || 0;
         const exitStatus = this.formatExitStatus(trade);
         const isStopped = exitStatus === 'Stopped';
+        // For stopped trades, use realized P&L; for expired, use full premium
+        const pnlHKD = isStopped ? (trade.realizedPnl || 0) : (trade.entryPremium || 0);
+        const pnlUSD = isStopped ? (trade.realizedPnlUSD || 0) : (trade.premiumReceived || 0);
 
         html += `
           <div style="padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.02); border-radius: 4px;">
