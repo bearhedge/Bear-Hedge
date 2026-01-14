@@ -958,19 +958,8 @@
             const result = data.chart?.result?.[0];
             if (result?.meta) {
               const m = result.meta;
-              // Get the latest price from actual data points (includes pre/post market)
-              const quotes = result.indicators?.quote?.[0];
-              const closes = quotes?.close || [];
-              // Find last non-null close price
-              let latestPrice = null;
-              for (let i = closes.length - 1; i >= 0; i--) {
-                if (closes[i] !== null) {
-                  latestPrice = closes[i];
-                  break;
-                }
-              }
               return {
-                price: latestPrice || m.regularMarketPrice,
+                price: m.regularMarketPrice,
                 prevClose: m.previousClose || m.chartPreviousClose
               };
             }
@@ -979,9 +968,37 @@
         return null;
       }
 
-      const [spyData, vixData] = await Promise.all([fetchYahoo('SPY'), fetchYahoo('^VIX')]);
-      console.log('Yahoo:', 'SPY:', spyData?.price, 'VIX:', vixData?.price);
-      if (spyData) displayQuote(spxEl, spxLabelEl, spyData.price, spyData.prevClose, 'SPY', true, false);
+      // Check if during regular market hours (9:30am-4pm ET, weekdays)
+      function isMarketOpen() {
+        const now = new Date();
+        const etStr = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
+        const et = new Date(etStr);
+        const day = et.getDay();
+        const hour = et.getHours();
+        const minute = et.getMinutes();
+        const isWeekday = day >= 1 && day <= 5;
+        const afterOpen = hour > 9 || (hour === 9 && minute >= 30);
+        const beforeClose = hour < 16;
+        return isWeekday && afterOpen && beforeClose;
+      }
+
+      const [spyData, esData, vixData] = await Promise.all([
+        fetchYahoo('SPY'),
+        fetchYahoo('ES=F'),
+        fetchYahoo('^VIX')
+      ]);
+
+      // Use SPY during market hours, ES Futures outside
+      if (isMarketOpen()) {
+        console.log('Market OPEN - SPY:', spyData?.price);
+        if (spyData) displayQuote(spxEl, spxLabelEl, spyData.price, spyData.prevClose, 'SPY', true, false);
+      } else {
+        // ES Futures price is ~10x SPY (index points vs ETF), divide by 10 for display
+        const esPrice = esData?.price ? esData.price / 10 : null;
+        const esPrevClose = esData?.prevClose ? esData.prevClose / 10 : null;
+        console.log('Market CLOSED - ES Futures:', esData?.price, '-> SPY equiv:', esPrice?.toFixed(2));
+        if (esPrice) displayQuote(spxEl, spxLabelEl, esPrice, esPrevClose, 'S&P Futures', true, false);
+      }
       if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
     }
 
