@@ -993,8 +993,8 @@
         console.log('Market OPEN - SPY:', spyData?.price);
         if (spyData) displayQuote(spxEl, spxLabelEl, spyData.price, spyData.prevClose, 'SPY', true, false);
       } else {
-        console.log('Market CLOSED - S&P 500:', spxData?.price);
-        if (spxData?.price) displayQuote(spxEl, spxLabelEl, spxData.price, spxData.prevClose, 'S&P 500', true, false);
+        console.log('Market CLOSED - S&P:', spxData?.price);
+        if (spxData?.price) displayQuote(spxEl, spxLabelEl, spxData.price, spxData.prevClose, 'S&P', true, false);
       }
       if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
     }
