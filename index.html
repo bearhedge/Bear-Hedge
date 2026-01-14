@@ -951,7 +951,30 @@
       async function fetchYahoo(symbol) {
         try {
           const cacheBust = Date.now();
-          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1m&range=1d&_=${cacheBust}`;
+          const url = `https://query1.finance.yahoo.com/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1m&range=1d&includePrePost=true&_=${cacheBust}`;
+          const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`, { cache: 'no-store' });
+          if (response.ok) {
+            const data = await response.json();
+            if (data.chart?.result?.[0]?.meta) {
+              const m = data.chart.result[0].meta;
+              return {
+                regularPrice: m.regularMarketPrice,
+                preMarketPrice: m.preMarketPrice,
+                postMarketPrice: m.postMarketPrice,
+                prevClose: m.previousClose || m.chartPreviousClose,
+                marketState: m.marketState
+              };
+            }
+          }
+        } catch (e) { console.log(`Yahoo ${symbol} error:`, e.message); }
+        return null;
+      }
+
+      // Fetch ES futures for overnight gap (8pm-4am ET)
+      async function fetchESFutures() {
+        try {
+          const cacheBust = Date.now();
+          const url = `https://query1.finance.yahoo.com/v8/finance/chart/ES=F?interval=1m&range=1d&_=${cacheBust}`;
           const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`, { cache: 'no-store' });
           if (response.ok) {
             const data = await response.json();
@@ -960,14 +983,44 @@
               return { price: m.regularMarketPrice, prevClose: m.previousClose || m.chartPreviousClose };
             }
           }
-        } catch (e) { console.log(`Yahoo ${symbol} error:`, e.message); }
+        } catch (e) { console.log('ES Futures error:', e.message); }
         return null;
       }
 
-      const [spyData, vixData] = await Promise.all([fetchYahoo('SPY'), fetchYahoo('^VIX')]);
-      console.log('Yahoo:', 'SPY:', spyData?.price, 'VIX:', vixData?.price);
-      if (spyData) displayQuote(spxEl, spxLabelEl, spyData.price, spyData.prevClose, 'SPY', true, false);
-      if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
+      // Get best available SPY price with hierarchy: regular > post > pre > ES futures
+      function getBestPrice(spyData, esData) {
+        // Priority 1: Regular market price (during RTH 9:30am-4pm ET)
+        if (spyData?.regularPrice) {
+          // Check if we have extended hours prices available
+          if (spyData.postMarketPrice) {
+            // Post-market session (4pm-8pm ET)
+            return { price: spyData.postMarketPrice, prevClose: spyData.prevClose, label: 'SPY (Post)' };
+          }
+          if (spyData.preMarketPrice) {
+            // Pre-market session (4am-9:30am ET)
+            return { price: spyData.preMarketPrice, prevClose: spyData.prevClose, label: 'SPY (Pre)' };
+          }
+          // Regular hours or no extended data - use regular price
+          return { price: spyData.regularPrice, prevClose: spyData.prevClose, label: 'SPY' };
+        }
+        // Priority 4: ES Futures (overnight 8pm-4am ET when SPY has no data)
+        if (esData?.price) {
+          return { price: esData.price, prevClose: esData.prevClose, label: 'ES' };
+        }
+        return null;
+      }
+
+      const [spyData, vixData, esData] = await Promise.all([
+        fetchYahoo('SPY'),
+        fetchYahoo('^VIX'),
+        fetchESFutures()
+      ]);
+
+      const bestSpy = getBestPrice(spyData, esData);
+      console.log('Market:', bestSpy?.label, bestSpy?.price, '| VIX:', vixData?.regularPrice);
+
+      if (bestSpy) displayQuote(spxEl, spxLabelEl, bestSpy.price, bestSpy.prevClose, bestSpy.label, true, false);
+      if (vixData) displayQuote(vixEl, vixLabelEl, vixData.regularPrice || vixData.preMarketPrice || vixData.postMarketPrice, vixData.prevClose, 'VIX', false, true);
     }
 
     fetchMarketData();
