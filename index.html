@@ -1018,10 +1018,10 @@
           fetchYahoo('^VIX')
         ]);
       } else {
-        // Overnight - use futures
-        [esData, vxData] = await Promise.all([
+        // Overnight - use ES futures + regular VIX (VIX futures not available on Yahoo)
+        [esData, vixData] = await Promise.all([
           fetchYahoo('ES=F'),
-          fetchYahoo('VX=F')
+          fetchYahoo('^VIX')
         ]);
       }
 
@@ -1035,9 +1035,9 @@
         if (spxData?.price) displayQuote(spxEl, spxLabelEl, spxData.price, spxData.prevClose, 'S&P', true, false);
         if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
       } else {
-        console.log('Overnight - ES Futures:', esData?.price, 'VX Futures:', vxData?.price);
+        console.log('Overnight - ES Futures:', esData?.price, 'VIX:', vixData?.price);
         if (esData?.price) displayQuote(spxEl, spxLabelEl, esData.price, esData.prevClose, 'S&P Futures', true, false);
-        if (vxData?.price) displayQuote(vixEl, vixLabelEl, vxData.price, vxData.prevClose, 'VIX Futures', false, true);
+        if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
       }
     }
 
