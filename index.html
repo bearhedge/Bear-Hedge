@@ -987,25 +987,22 @@
         return null;
       }
 
-      // Get best available SPY price with hierarchy: regular > post > pre > ES futures
+      // Get best available SPY price with hierarchy: post > pre > regular > ES futures
       function getBestPrice(spyData, esData) {
-        // Priority 1: Regular market price (during RTH 9:30am-4pm ET)
         if (spyData?.regularPrice) {
           // Check if we have extended hours prices available
           if (spyData.postMarketPrice) {
-            // Post-market session (4pm-8pm ET)
-            return { price: spyData.postMarketPrice, prevClose: spyData.prevClose, label: 'SPY (Post)' };
+            return { price: spyData.postMarketPrice, prevClose: spyData.prevClose, label: 'SPY' };
           }
           if (spyData.preMarketPrice) {
-            // Pre-market session (4am-9:30am ET)
-            return { price: spyData.preMarketPrice, prevClose: spyData.prevClose, label: 'SPY (Pre)' };
+            return { price: spyData.preMarketPrice, prevClose: spyData.prevClose, label: 'SPY' };
           }
-          // Regular hours or no extended data - use regular price
+          // Regular hours or no extended data
           return { price: spyData.regularPrice, prevClose: spyData.prevClose, label: 'SPY' };
         }
-        // Priority 4: ES Futures (overnight 8pm-4am ET when SPY has no data)
+        // Fall back to ES Futures overnight
         if (esData?.price) {
-          return { price: esData.price, prevClose: esData.prevClose, label: 'ES' };
+          return { price: esData.price, prevClose: esData.prevClose, label: 'S&P Futures' };
         }
         return null;
       }
