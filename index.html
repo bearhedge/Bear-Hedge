@@ -987,22 +987,38 @@
         return null;
       }
 
-      // Get best available SPY price with hierarchy: post > pre > regular > ES futures
+      // Get best available SPY price with hierarchy: post > pre > regular (during RTH) > ES futures
       function getBestPrice(spyData, esData) {
-        if (spyData?.regularPrice) {
-          // Check if we have extended hours prices available
-          if (spyData.postMarketPrice) {
-            return { price: spyData.postMarketPrice, prevClose: spyData.prevClose, label: 'SPY' };
-          }
-          if (spyData.preMarketPrice) {
-            return { price: spyData.preMarketPrice, prevClose: spyData.prevClose, label: 'SPY' };
-          }
-          // Regular hours or no extended data
+        // Check if we have extended hours prices from SPY
+        if (spyData?.postMarketPrice) {
+          return { price: spyData.postMarketPrice, prevClose: spyData.prevClose, label: 'SPY' };
+        }
+        if (spyData?.preMarketPrice) {
+          return { price: spyData.preMarketPrice, prevClose: spyData.prevClose, label: 'SPY' };
+        }
+
+        // Check if we're during regular trading hours (9:30am-4pm ET)
+        const now = new Date();
+        const etTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+        const hour = etTime.getHours();
+        const minute = etTime.getMinutes();
+        const day = etTime.getDay(); // 0=Sun, 6=Sat
+        const isWeekday = day >= 1 && day <= 5;
+        const isMarketHours = isWeekday && ((hour === 9 && minute >= 30) || (hour >= 10 && hour < 16));
+
+        // During market hours, use SPY regular price
+        if (isMarketHours && spyData?.regularPrice) {
           return { price: spyData.regularPrice, prevClose: spyData.prevClose, label: 'SPY' };
         }
-        // Fall back to ES Futures overnight
+
+        // Outside market hours, prefer ES Futures for live data
         if (esData?.price) {
           return { price: esData.price, prevClose: esData.prevClose, label: 'S&P Futures' };
+        }
+
+        // Fallback to SPY regular price if ES not available
+        if (spyData?.regularPrice) {
+          return { price: spyData.regularPrice, prevClose: spyData.prevClose, label: 'SPY' };
         }
         return null;
       }
