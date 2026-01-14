@@ -982,19 +982,19 @@
         return isWeekday && afterOpen && beforeClose;
       }
 
-      const [spyData, esData, vixData] = await Promise.all([
+      const [spyData, spxData, vixData] = await Promise.all([
         fetchYahoo('SPY'),
-        fetchYahoo('ES=F'),
+        fetchYahoo('^GSPC'),
         fetchYahoo('^VIX')
       ]);
 
-      // Use SPY during market hours, ES Futures outside
+      // Use SPY during market hours, S&P 500 Index outside
       if (isMarketOpen()) {
         console.log('Market OPEN - SPY:', spyData?.price);
         if (spyData) displayQuote(spxEl, spxLabelEl, spyData.price, spyData.prevClose, 'SPY', true, false);
       } else {
-        console.log('Market CLOSED - ES Futures:', esData?.price);
-        if (esData?.price) displayQuote(spxEl, spxLabelEl, esData.price, esData.prevClose, 'S&P Futures', true, false);
+        console.log('Market CLOSED - S&P 500:', spxData?.price);
+        if (spxData?.price) displayQuote(spxEl, spxLabelEl, spxData.price, spxData.prevClose, 'S&P 500', true, false);
       }
       if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
     }
