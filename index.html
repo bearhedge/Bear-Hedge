@@ -955,14 +955,23 @@
           const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`, { cache: 'no-store' });
           if (response.ok) {
             const data = await response.json();
-            if (data.chart?.result?.[0]?.meta) {
-              const m = data.chart.result[0].meta;
+            const result = data.chart?.result?.[0];
+            if (result?.meta) {
+              const m = result.meta;
+              // Get the latest price from actual data points (includes pre/post market)
+              const quotes = result.indicators?.quote?.[0];
+              const closes = quotes?.close || [];
+              // Find last non-null close price
+              let latestPrice = null;
+              for (let i = closes.length - 1; i >= 0; i--) {
+                if (closes[i] !== null) {
+                  latestPrice = closes[i];
+                  break;
+                }
+              }
               return {
-                regularPrice: m.regularMarketPrice,
-                preMarketPrice: m.preMarketPrice,
-                postMarketPrice: m.postMarketPrice,
-                prevClose: m.previousClose || m.chartPreviousClose,
-                marketState: m.marketState
+                price: latestPrice || m.regularMarketPrice,
+                prevClose: m.previousClose || m.chartPreviousClose
               };
             }
           }
@@ -970,70 +979,10 @@
         return null;
       }
 
-      // Fetch ES futures for overnight gap (8pm-4am ET)
-      async function fetchESFutures() {
-        try {
-          const cacheBust = Date.now();
-          const url = `https://query1.finance.yahoo.com/v8/finance/chart/ES=F?interval=1m&range=1d&_=${cacheBust}`;
-          const response = await fetch(`https://corsproxy.io/?${encodeURIComponent(url)}`, { cache: 'no-store' });
-          if (response.ok) {
-            const data = await response.json();
-            if (data.chart?.result?.[0]?.meta) {
-              const m = data.chart.result[0].meta;
-              return { price: m.regularMarketPrice, prevClose: m.previousClose || m.chartPreviousClose };
-            }
-          }
-        } catch (e) { console.log('ES Futures error:', e.message); }
-        return null;
-      }
-
-      // Get best available SPY price with hierarchy: post > pre > regular (during RTH) > ES futures
-      function getBestPrice(spyData, esData) {
-        // Check if we have extended hours prices from SPY
-        if (spyData?.postMarketPrice) {
-          return { price: spyData.postMarketPrice, prevClose: spyData.prevClose, label: 'SPY' };
-        }
-        if (spyData?.preMarketPrice) {
-          return { price: spyData.preMarketPrice, prevClose: spyData.prevClose, label: 'SPY' };
-        }
-
-        // Check if we're during regular trading hours (9:30am-4pm ET)
-        const now = new Date();
-        const etTime = new Date(now.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-        const hour = etTime.getHours();
-        const minute = etTime.getMinutes();
-        const day = etTime.getDay(); // 0=Sun, 6=Sat
-        const isWeekday = day >= 1 && day <= 5;
-        const isMarketHours = isWeekday && ((hour === 9 && minute >= 30) || (hour >= 10 && hour < 16));
-
-        // During market hours, use SPY regular price
-        if (isMarketHours && spyData?.regularPrice) {
-          return { price: spyData.regularPrice, prevClose: spyData.prevClose, label: 'SPY' };
-        }
-
-        // Outside market hours, prefer ES Futures for live data
-        if (esData?.price) {
-          return { price: esData.price, prevClose: esData.prevClose, label: 'S&P Futures' };
-        }
-
-        // Fallback to SPY regular price if ES not available
-        if (spyData?.regularPrice) {
-          return { price: spyData.regularPrice, prevClose: spyData.prevClose, label: 'SPY' };
-        }
-        return null;
-      }
-
-      const [spyData, vixData, esData] = await Promise.all([
-        fetchYahoo('SPY'),
-        fetchYahoo('^VIX'),
-        fetchESFutures()
-      ]);
-
-      const bestSpy = getBestPrice(spyData, esData);
-      console.log('Market:', bestSpy?.label, bestSpy?.price, '| VIX:', vixData?.regularPrice);
-
-      if (bestSpy) displayQuote(spxEl, spxLabelEl, bestSpy.price, bestSpy.prevClose, bestSpy.label, true, false);
-      if (vixData) displayQuote(vixEl, vixLabelEl, vixData.regularPrice || vixData.preMarketPrice || vixData.postMarketPrice, vixData.prevClose, 'VIX', false, true);
+      const [spyData, vixData] = await Promise.all([fetchYahoo('SPY'), fetchYahoo('^VIX')]);
+      console.log('Yahoo:', 'SPY:', spyData?.price, 'VIX:', vixData?.price);
+      if (spyData) displayQuote(spxEl, spxLabelEl, spyData.price, spyData.prevClose, 'SPY', true, false);
+      if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
     }
 
     fetchMarketData();
