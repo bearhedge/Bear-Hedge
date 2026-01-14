@@ -180,10 +180,97 @@ const TrackWidget = {
       `;
     }
 
-    // === DAY-BY-DAY BREAKDOWN ===
+    // === LIVE TRADE (show first if open) ===
+    if (current && current.hasTrade && current.trade && current.trade.isOpen && current.trade.status === 'open') {
+      const t = current.trade;
+      const dayNum = streakLength + 1;
+      const pnlHKD = t.totalPremiumHKD || 0;
+      const pnlUSD = t.totalPremiumUSD || 0;
+
+      // Calculate premium sold from legs
+      let premiumSoldUSD = 0;
+      let putStrike = null, callStrike = null, leg1Premium = null, leg2Premium = null;
+      if (t.legs && t.legs.length > 0) {
+        for (const leg of t.legs) {
+          premiumSoldUSD += leg.premiumUSD || 0;
+          if (leg.type === 'PUT') {
+            putStrike = leg.strike;
+            leg1Premium = leg.premiumUSD / (leg.contracts * 100);
+          } else if (leg.type === 'CALL') {
+            callStrike = leg.strike;
+            leg2Premium = leg.premiumUSD / (leg.contracts * 100);
+          }
+        }
+      }
+      const HKD_RATE = 7.8;
+      const premiumSoldHKD = premiumSoldUSD * HKD_RATE;
+
+      // Contract breakdown
+      let contractsText = `${t.contracts}`;
+      if (putStrike && callStrike) {
+        contractsText = `${t.contracts / 2}P / ${t.contracts / 2}C`;
+      } else if (putStrike) {
+        contractsText = `${t.contracts}P`;
+      } else if (callStrike) {
+        contractsText = `${t.contracts}C`;
+      }
+
+      html += `
+        <div style="padding: 12px; margin-bottom: 8px; background: rgba(245, 158, 11, 0.06); border-radius: 4px; border-left: 2px solid #f59e0b;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
+            <div>
+              <span style="font-size: 13px; font-weight: 600; color: #fff;">Day ${dayNum}</span>
+              <span style="font-size: 11px; color: #555; margin-left: 8px;">${this.formatShortDate(current.todayStr)}</span>
+            </div>
+            <div style="font-size: 14px; font-weight: 600; color: #f59e0b;">HKD ${this.formatNumber(premiumSoldHKD)} <span style="font-size: 10px; color: #555; font-weight: 400;">(USD ${this.formatNumber(premiumSoldUSD)})</span></div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px; margin-bottom: 10px;">
+            <div>
+              <span style="color: #555;">${t.symbol}</span>
+              <span style="color: #888; margin-left: 4px;">${t.strategy}</span>
+            </div>
+            <div style="text-align: right;">
+              <span style="color: #555;">Entry</span>
+              <span style="color: #888; margin-left: 4px;">${t.entryTime}</span>
+            </div>
+            <div>
+              <span style="color: #555;">Strikes</span>
+              <span style="color: #888; margin-left: 4px;">${putStrike ? putStrike + 'P' : ''}${putStrike && callStrike ? ' / ' : ''}${callStrike ? callStrike + 'C' : ''}</span>
+            </div>
+            <div style="text-align: right;">
+              <span style="color: #555;">Contracts</span>
+              <span style="color: #888; margin-left: 4px;">${contractsText}</span>
+            </div>
+            <div>
+              <span style="color: #555;">Implied Notional</span>
+            </div>
+            <div style="text-align: right;">
+              <span style="color: #888;">HKD ${(((putStrike || 0) + (callStrike || 0)) * (t.contracts / (putStrike && callStrike ? 2 : 1)) * 100 * 7.8).toLocaleString()}</span>
+            </div>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: 10px; color: #444; margin-bottom: 8px;">
+            <span>
+              ${leg1Premium ? `Put @${leg1Premium.toFixed(3)}` : ''}
+              ${leg1Premium && leg2Premium ? ' · ' : ''}
+              ${leg2Premium ? `Call @${leg2Premium.toFixed(3)}` : ''}
+            </span>
+            ${t.stopLossMultiplier ? `<span style="color: #666;">Stop: ${parseFloat(t.stopLossMultiplier).toFixed(1)}x</span>` : ''}
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid #333;">
+            <span style="font-size: 10px; padding: 2px 8px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-radius: 3px;">
+              Open
+            </span>
+            ${current.timeUntilClose ? `<span style="font-size: 10px; color: #666;">Closes in ${current.timeUntilClose}</span>` : ''}
+          </div>
+        </div>
+      `;
+    }
+
+    // === DAY-BY-DAY BREAKDOWN (newest first) ===
     if (streakLength > 0) {
-      streakTrades.forEach((trade, idx) => {
-        const dayNum = idx + 1;
+      // Reverse to show newest day first
+      [...streakTrades].reverse().forEach((trade, idx) => {
+        const dayNum = streakLength - idx;
         const exitStatus = this.formatExitStatus(trade);
         const isStopped = exitStatus === 'Stopped';
         // For stopped trades, use realized P&L; for expired, use full premium
@@ -250,103 +337,6 @@ const TrackWidget = {
           </div>
         `;
       });
-    }
-
-    // === LIVE TRADE (show as next day in streak format) ===
-    // Only show if trade is truly open (not expired/closed)
-    if (current && current.hasTrade && current.trade && current.trade.isOpen && current.trade.status === 'open') {
-      const t = current.trade;
-      const dayNum = streakLength + 1;
-      const pnlHKD = t.totalPremiumHKD || 0;
-      const pnlUSD = t.totalPremiumUSD || 0;
-
-      // Calculate premium sold from legs
-      let premiumSoldUSD = 0;
-      let putStrike = null, callStrike = null, leg1Premium = null, leg2Premium = null;
-      if (t.legs && t.legs.length > 0) {
-        for (const leg of t.legs) {
-          premiumSoldUSD += leg.premiumUSD || 0;
-          if (leg.type === 'PUT') {
-            putStrike = leg.strike;
-            leg1Premium = leg.premiumUSD / (leg.contracts * 100);
-          } else if (leg.type === 'CALL') {
-            callStrike = leg.strike;
-            leg2Premium = leg.premiumUSD / (leg.contracts * 100);
-          }
-        }
-      }
-      const HKD_RATE = 7.8;
-      const premiumSoldHKD = premiumSoldUSD * HKD_RATE;
-      const costToCloseUSD = premiumSoldUSD - pnlUSD;
-      const costToCloseHKD = premiumSoldHKD - pnlHKD;
-
-      // Contract breakdown
-      let contractsText = `${t.contracts}`;
-      if (putStrike && callStrike) {
-        contractsText = `${t.contracts / 2}P / ${t.contracts / 2}C`;
-      } else if (putStrike) {
-        contractsText = `${t.contracts}P`;
-      } else if (callStrike) {
-        contractsText = `${t.contracts}C`;
-      }
-
-      html += `
-        <div style="padding: 12px; margin-bottom: 8px; background: rgba(245, 158, 11, 0.06); border-radius: 4px; border-left: 2px solid #f59e0b;">
-
-          <!-- Header: Day + Date + P&L -->
-          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px;">
-            <div>
-              <span style="font-size: 13px; font-weight: 600; color: #fff;">Day ${dayNum}</span>
-              <span style="font-size: 11px; color: #555; margin-left: 8px;">${this.formatShortDate(current.todayStr)}</span>
-            </div>
-            <div style="font-size: 14px; font-weight: 600; color: #f59e0b;">HKD ${this.formatNumber(premiumSoldHKD)} <span style="font-size: 10px; color: #555; font-weight: 400;">(USD ${this.formatNumber(premiumSoldUSD)})</span></div>
-          </div>
-
-          <!-- Trade Info Grid -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px; font-size: 11px; margin-bottom: 10px;">
-            <div>
-              <span style="color: #555;">${t.symbol}</span>
-              <span style="color: #888; margin-left: 4px;">${t.strategy}</span>
-            </div>
-            <div style="text-align: right;">
-              <span style="color: #555;">Entry</span>
-              <span style="color: #888; margin-left: 4px;">${t.entryTime}</span>
-            </div>
-            <div>
-              <span style="color: #555;">Strikes</span>
-              <span style="color: #888; margin-left: 4px;">${putStrike ? putStrike + 'P' : ''}${putStrike && callStrike ? ' / ' : ''}${callStrike ? callStrike + 'C' : ''}</span>
-            </div>
-            <div style="text-align: right;">
-              <span style="color: #555;">Contracts</span>
-              <span style="color: #888; margin-left: 4px;">${contractsText}</span>
-            </div>
-            <div>
-              <span style="color: #555;">Implied Notional</span>
-            </div>
-            <div style="text-align: right;">
-              <span style="color: #888;">HKD ${(((putStrike || 0) + (callStrike || 0)) * (t.contracts / (putStrike && callStrike ? 2 : 1)) * 100 * 7.8).toLocaleString()}</span>
-            </div>
-          </div>
-
-          <!-- Premium per leg + Stop loss -->
-          <div style="display: flex; justify-content: space-between; font-size: 10px; color: #444; margin-bottom: 8px;">
-            <span>
-              ${leg1Premium ? `Put @${leg1Premium.toFixed(3)}` : ''}
-              ${leg1Premium && leg2Premium ? ' · ' : ''}
-              ${leg2Premium ? `Call @${leg2Premium.toFixed(3)}` : ''}
-            </span>
-            ${t.stopLossMultiplier ? `<span style="color: #666;">Stop: ${parseFloat(t.stopLossMultiplier).toFixed(1)}x</span>` : ''}
-          </div>
-
-          <!-- Status -->
-          <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 8px; border-top: 1px solid #333;">
-            <span style="font-size: 10px; padding: 2px 8px; background: rgba(245, 158, 11, 0.15); color: #f59e0b; border-radius: 3px;">
-              Open
-            </span>
-            ${current.timeUntilClose ? `<span style="font-size: 10px; color: #666;">Closes in ${current.timeUntilClose}</span>` : ''}
-          </div>
-        </div>
-      `;
     }
 
     html += `</div>`;
