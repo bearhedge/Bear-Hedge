@@ -993,11 +993,8 @@
         console.log('Market OPEN - SPY:', spyData?.price);
         if (spyData) displayQuote(spxEl, spxLabelEl, spyData.price, spyData.prevClose, 'SPY', true, false);
       } else {
-        // ES Futures price is ~10x SPY (index points vs ETF), divide by 10 for display
-        const esPrice = esData?.price ? esData.price / 10 : null;
-        const esPrevClose = esData?.prevClose ? esData.prevClose / 10 : null;
-        console.log('Market CLOSED - ES Futures:', esData?.price, '-> SPY equiv:', esPrice?.toFixed(2));
-        if (esPrice) displayQuote(spxEl, spxLabelEl, esPrice, esPrevClose, 'S&P Futures', true, false);
+        console.log('Market CLOSED - ES Futures:', esData?.price);
+        if (esData?.price) displayQuote(spxEl, spxLabelEl, esData.price, esData.prevClose, 'S&P Futures', true, false);
       }
       if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
     }
