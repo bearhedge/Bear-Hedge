@@ -968,35 +968,77 @@
         return null;
       }
 
-      // Check if during regular market hours (9:30am-4pm ET, weekdays)
-      function isMarketOpen() {
+      // Get current ET time info
+      function getETTime() {
         const now = new Date();
         const etStr = now.toLocaleString('en-US', { timeZone: 'America/New_York' });
         const et = new Date(etStr);
-        const day = et.getDay();
-        const hour = et.getHours();
-        const minute = et.getMinutes();
-        const isWeekday = day >= 1 && day <= 5;
-        const afterOpen = hour > 9 || (hour === 9 && minute >= 30);
-        const beforeClose = hour < 16;
-        return isWeekday && afterOpen && beforeClose;
+        return {
+          day: et.getDay(),
+          hour: et.getHours(),
+          minute: et.getMinutes(),
+          isWeekday: et.getDay() >= 1 && et.getDay() <= 5
+        };
       }
 
-      const [spyData, spxData, vixData] = await Promise.all([
-        fetchYahoo('SPY'),
-        fetchYahoo('^GSPC'),
-        fetchYahoo('^VIX')
-      ]);
+      // Determine which tier we're in:
+      // 1. Market hours (9:30 AM - 4:00 PM ET): SPY + VIX
+      // 2. Extended hours (4:00 PM - 8:00 PM ET): S&P Index + VIX
+      // 3. Overnight (8:00 PM - 9:30 AM ET): ES Futures + VIX Futures
+      function getMarketTier() {
+        const { hour, minute, isWeekday } = getETTime();
+        const timeInMinutes = hour * 60 + minute;
 
-      // Use SPY during market hours, S&P 500 Index outside
-      if (isMarketOpen()) {
+        const marketOpen = 9 * 60 + 30;   // 9:30 AM
+        const marketClose = 16 * 60;       // 4:00 PM
+        const extendedClose = 20 * 60;     // 8:00 PM
+
+        if (isWeekday && timeInMinutes >= marketOpen && timeInMinutes < marketClose) {
+          return 'market';      // 9:30 AM - 4:00 PM ET
+        } else if (isWeekday && timeInMinutes >= marketClose && timeInMinutes < extendedClose) {
+          return 'extended';    // 4:00 PM - 8:00 PM ET
+        } else {
+          return 'overnight';   // 8:00 PM - 9:30 AM ET (and weekends)
+        }
+      }
+
+      const tier = getMarketTier();
+
+      // Fetch data based on tier
+      let spyData, spxData, esData, vixData, vxData;
+
+      if (tier === 'market') {
+        [spyData, vixData] = await Promise.all([
+          fetchYahoo('SPY'),
+          fetchYahoo('^VIX')
+        ]);
+      } else if (tier === 'extended') {
+        [spxData, vixData] = await Promise.all([
+          fetchYahoo('^GSPC'),
+          fetchYahoo('^VIX')
+        ]);
+      } else {
+        // Overnight - use futures
+        [esData, vxData] = await Promise.all([
+          fetchYahoo('ES=F'),
+          fetchYahoo('VX=F')
+        ]);
+      }
+
+      // Display based on tier
+      if (tier === 'market') {
         console.log('Market OPEN - SPY:', spyData?.price);
         if (spyData) displayQuote(spxEl, spxLabelEl, spyData.price, spyData.prevClose, 'SPY', true, false);
-      } else {
-        console.log('Market CLOSED - S&P:', spxData?.price);
+        if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
+      } else if (tier === 'extended') {
+        console.log('Extended Hours - S&P:', spxData?.price);
         if (spxData?.price) displayQuote(spxEl, spxLabelEl, spxData.price, spxData.prevClose, 'S&P', true, false);
+        if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
+      } else {
+        console.log('Overnight - ES Futures:', esData?.price, 'VX Futures:', vxData?.price);
+        if (esData?.price) displayQuote(spxEl, spxLabelEl, esData.price, esData.prevClose, 'S&P Futures', true, false);
+        if (vxData?.price) displayQuote(vixEl, vixLabelEl, vxData.price, vxData.prevClose, 'VIX Futures', false, true);
       }
-      if (vixData) displayQuote(vixEl, vixLabelEl, vixData.price, vixData.prevClose, 'VIX', false, true);
     }
 
     fetchMarketData();
