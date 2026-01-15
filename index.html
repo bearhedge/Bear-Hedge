@@ -958,9 +958,10 @@
             const result = data.chart?.result?.[0];
             if (result?.meta) {
               const m = result.meta;
+              // Use regularMarketPreviousClose (matches Yahoo's % calc) over chartPreviousClose
               return {
                 price: m.regularMarketPrice,
-                prevClose: m.previousClose || m.chartPreviousClose
+                prevClose: m.regularMarketPreviousClose || m.previousClose || m.chartPreviousClose
               };
             }
           }
