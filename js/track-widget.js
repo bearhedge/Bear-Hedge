@@ -140,8 +140,11 @@ const TrackWidget = {
     let accumulatedNotional = 0;
     for (const t of streakTrades) {
       const isStopped = t.status && t.status.toLowerCase().includes('stop');
-      accumulatedUSD += isStopped ? (t.realizedPnlUSD || 0) : (t.premiumReceived || 0);
-      accumulatedHKD += isStopped ? (t.realizedPnl || 0) : (t.entryPremium || 0);
+      const isExercised = (t.exitReason || '').toLowerCase().includes('exercised') ||
+                          (t.exitReason || '').toLowerCase().includes('assigned');
+      const useRealizedPnl = isStopped || isExercised;
+      accumulatedUSD += useRealizedPnl ? (t.realizedPnlUSD || 0) : (t.premiumReceived || 0);
+      accumulatedHKD += useRealizedPnl ? (t.realizedPnl || 0) : (t.entryPremium || 0);
       accumulatedNotional += t.totalNotionalHKD || 0;
     }
 
@@ -273,9 +276,11 @@ const TrackWidget = {
         const dayNum = streakLength - idx;
         const exitStatus = this.formatExitStatus(trade);
         const isStopped = exitStatus === 'Stopped';
-        // For stopped trades, use realized P&L; for expired, use full premium
-        const pnlHKD = isStopped ? (trade.realizedPnl || 0) : (trade.entryPremium || 0);
-        const pnlUSD = isStopped ? (trade.realizedPnlUSD || 0) : (trade.premiumReceived || 0);
+        const isExercised = exitStatus === 'Exercised';
+        // For stopped or exercised trades, use realized P&L; for expired, use full premium
+        const useRealizedPnl = isStopped || isExercised;
+        const pnlHKD = useRealizedPnl ? (trade.realizedPnl || 0) : (trade.entryPremium || 0);
+        const pnlUSD = useRealizedPnl ? (trade.realizedPnlUSD || 0) : (trade.premiumReceived || 0);
 
         html += `
           <div style="padding: 12px; margin-bottom: 8px; background: rgba(255,255,255,0.02); border-radius: 4px;">

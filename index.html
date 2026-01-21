@@ -704,9 +704,9 @@
     <div class="header__time">
       <span id="time-hk" class="time-hk"></span>
       <span class="header__time-sep">·</span>
-      <span id="time-lon" class="time-lon"></span>
-      <span class="header__time-sep">·</span>
       <span id="time-ny" class="time-ny"></span>
+      <span class="header__time-sep">·</span>
+      <span id="time-lon" class="time-lon"></span>
     </div>
   </header>
 
@@ -721,7 +721,7 @@
       <div class="window__content">
         <p>> OPTIONS TRADING</p>
         <p>> HONG KONG</p>
-        <p>> FOCUS: TOOLING</p>
+        <p>> FOCUS: AI TOOLING</p>
       </div>
     </div>
 
@@ -754,7 +754,7 @@
     <!-- Contact Window -->
     <div class="window" id="window-contact">
       <div class="window__header">
-        <span class="window__title">contact.sh</span>
+        <span class="window__title">info.sh</span>
         <button class="window__close" onclick="toggleWindow('contact')">close</button>
       </div>
       <div class="window__content">
@@ -763,6 +763,9 @@
         </a>
         <a href="https://www.linkedin.com/company/bearhedge" target="_blank" class="contact-link">
           <span>> LINKEDIN</span>/company/bearhedge
+        </a>
+        <a href="https://github.com/bearhedge" target="_blank" class="contact-link">
+          <span>> GITHUB</span>/bearhedge
         </a>
         <div class="contact-link" style="cursor: default; border-bottom: none;">
           <span>> ADDRESS</span>SUP Tower, Room 1104, 75 King's Road
@@ -778,31 +781,6 @@
       </div>
       <div class="window__content">
         <p style="color: #666; font-size: 12px;">Loading...</p>
-      </div>
-    </div>
-
-    <!-- CANDLE Window -->
-    <div class="window" id="window-candle" style="min-width: 320px;">
-      <div class="window__header">
-        <span class="window__title">candle.png</span>
-        <span class="project-status building" style="margin-left: 8px;">WIP</span>
-        <button class="window__close" onclick="toggleWindow('candle')">close</button>
-      </div>
-      <div class="window__content">
-        <p style="color: #ffeb3b; margin-bottom: 12px;">> OPTION CHART</p>
-        <p style="color: #666; font-size: 11px; margin-bottom: 12px;">Coming soon</p>
-        <div class="chart-placeholder">
-          <div class="chart-candles">
-            <div class="chart-candle up" style="height: 40px;"></div>
-            <div class="chart-candle down" style="height: 25px;"></div>
-            <div class="chart-candle up" style="height: 35px;"></div>
-            <div class="chart-candle down" style="height: 20px;"></div>
-            <div class="chart-candle up" style="height: 45px;"></div>
-            <div class="chart-candle up" style="height: 50px;"></div>
-            <div class="chart-candle down" style="height: 30px;"></div>
-            <div class="chart-candle up" style="height: 55px;"></div>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -849,9 +827,8 @@
     <span class="dock__cursor"></span>
     <button class="dock__item" onclick="toggleWindow('readme')" id="dock-readme">README.txt</button>
     <button class="dock__item" onclick="toggleWindow('tofu')" id="dock-tofu">chief-dog-officer</button>
-    <button class="dock__item" onclick="toggleWindow('contact')" id="dock-contact">contact.sh</button>
+    <button class="dock__item" onclick="toggleWindow('contact')" id="dock-contact">info.sh</button>
     <button class="dock__item" onclick="toggleWindow('track')" id="dock-track">track.log</button>
-    <button class="dock__item" onclick="toggleWindow('candle')" id="dock-candle">candle.png</button>
     <button class="dock__item" onclick="toggleWindow('projects')" id="dock-projects">projects/</button>
   </div>
 
@@ -867,7 +844,6 @@
       tofu: false,
       contact: false,
       track: false,
-      candle: false,
       projects: false,
       nft: false
     };
